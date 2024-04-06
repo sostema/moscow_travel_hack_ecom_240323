@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from repository.redis_repository import RedisRepository
-from schemas.message import Message, Messages
+from schemas.message import Message, Messages, MessageType
 from shared.base import logger
 from shared.ulid import ulid_as_uuid
 from supplier.gigachat_supplier import GigachatSupplier
@@ -27,7 +27,7 @@ class ChatService:
         history = Messages.parse_raw(history_raw.decode())
         filtered_messages = []
         for message in history.messages:
-            if message.chain_message.type == "system":
+            if message.type_ == MessageType.SYSTEM:
                 continue
             filtered_messages.append(message)
 

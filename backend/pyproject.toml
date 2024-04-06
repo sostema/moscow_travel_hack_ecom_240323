@@ -22,7 +22,7 @@ ulid-py = "^1.1.0"
 geoalchemy2 = "^0.14.1"
 aiohttp = "^3.8.6"
 requests = "^2.31.0"
-pydantic = "v1.10.8"
+pydantic = "v2.6.4"
 greenlet = "^3.0.3"
 gigachain = "^0.1.13.2"
 langserve = "^0.0.51"
@@ -32,6 +32,7 @@ pgvector = "^0.2.5"
 langchain-community = "^0.0.31"
 jupyterlab = "^4.1.5"
 python-dotenv = "^1.0.1"
+pydantic-settings = "^2.2.1"
 
 
 [build-system]
