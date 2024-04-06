@@ -18,9 +18,6 @@ class AppSettings(BaseSettings):
     uvicorn_port: int = 8000
     uvicorn_workers: int = mp.cpu_count()
     uvicorn_log_level: str = "WARNING"
-    uvicorn_ssl: bool = False
-    uvicorn_ssl_keyfile: str | None = None
-    uvicorn_ssl_certfile: str | None = None
 
     gigachat_client_secret: str
     gigachat_auth_key: str
