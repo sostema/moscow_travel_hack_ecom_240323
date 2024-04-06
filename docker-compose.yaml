@@ -14,11 +14,6 @@ services:
     build:
       context: backend
       dockerfile: Dockerfile
-    depends_on:
-      redis:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
     volumes:
       - "./backend/.env:/app/.env"
       - "./volumes/backend:/app/data"
@@ -44,13 +39,6 @@ services:
   #   build:
   #     context: frontend
   #     dockerfile: Dockerfile
-  #   depends_on:
-  #     redis:
-  #       condition: service_healthy
-  #     postgres:
-  #       condition: service_healthy
-  #     backend:
-  #       condition: service_healthy
   #   ports:
   #     - "80:80"
   #     - "433:433"
