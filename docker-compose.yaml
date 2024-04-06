@@ -20,7 +20,7 @@ services:
       resources:
         limits:
           cpus: '3.00'
-          memory: 3000M
+          memory: 10000M
 
   frontend:
     restart: always

@@ -1,10 +1,9 @@
 from fastapi import APIRouter
-from presentation.web.examples import events
-from schemas.event import Event
+from schemas.event import Events, example_events
 
 router = APIRouter(prefix="/events")
 
 
-@router.get("", response_model_exclude_none=True)
-async def get_events() -> list[Event]:
-    return events
+@router.get("", response_model_exclude_none=True, response_model=Events)
+async def get_events() -> Events:
+    return Events(events=example_events)
