@@ -1,12 +1,7 @@
-import enum
-
 from fastapi import APIRouter, Header, HTTPException, Response, status
-from fastapi.responses import UJSONResponse
 from presentation.dependencies import container
-from presentation.web.schemas import HealthResponse, HealthStatuses
 from schemas.base import CamelizedBaseModel
 from service.chat_service import HistoryNotFound
-from shared.base import logger
 
 router = APIRouter(prefix="/gigachat")
 
