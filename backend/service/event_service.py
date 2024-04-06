@@ -1,3 +1,4 @@
+import random
 from dataclasses import dataclass
 
 from repository.pg_repository import PgRepository
@@ -9,4 +10,6 @@ class EventService:
     pg_repository: PgRepository
 
     def get_events(self) -> Events:
-        return self.pg_repository.get_events()
+        return Events(
+            events=random.choices(self.pg_repository.get_events().events, k=6)
+        )
