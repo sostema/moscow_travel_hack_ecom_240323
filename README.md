@@ -7,6 +7,12 @@
 
 #### Диаграмма решения
 ![arch](docs/arch.svg)
+Все компаненты контейнерезированы:
+- nginx - reverse-proxy
+- frontend
+- backend
+- redis
+- postgresql
 
 #### Запуск решения
 ```bash

@@ -5,9 +5,6 @@ services:
     environment:
       _UVICORN_HOST: "0.0.0.0"
       _UVICORN_PORT: 8000
-      _UVICORN_SSL: "true"
-      _UVICORN_SSL_KEYFILE: "data/certs/privkey.pem"
-      _UVICORN_SSL_CERTFILE: "data/certs/fullchain.pem"
       _REDIS_HOST: "redis"
       _PG_HOST: "postgres"
     build:
@@ -16,8 +13,6 @@ services:
     volumes:
       - "./backend/.env:/app/.env"
       - "./volumes/backend:/app/data"
-    ports:
-      - "8000:8000"
     deploy:
       resources:
         limits:
@@ -40,6 +35,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "8000:8000"
     links:
       - frontend
     volumes:
