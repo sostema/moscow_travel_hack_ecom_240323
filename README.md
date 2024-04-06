@@ -17,15 +17,15 @@
 #### Запуск решения
 ##### В докере
 C ssl
-```bash
+```sh
 docker compose up # С SSL
 ```
 Без ssl
-```bash
+```sh
 docker compose -f docker-compose-nossl.yaml up
 ```
 Локально
-```bash
+```sh
 make frontend-install
 
 make backend-install
