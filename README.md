@@ -6,7 +6,7 @@
 - Сваггер [документация](https://amazing-digital-misis.ru:8000/docs)
 
 #### Диаграмма решения
-![arch](docs/arch.svg)
+![arch](docs/arch.svg)<br>
 Все компаненты контейнерезированы:
 - `nginx` - reverse-proxy
 - `frontend` - react bff приложение для фронтенда
