@@ -5,17 +5,17 @@ services:
     environment:
       _UVICORN_HOST: "0.0.0.0"
       _UVICORN_PORT: 8000
-      _UVICORN_SSL: "false"
       _REDIS_HOST: "redis"
       _PG_HOST: "postgres"
     build:
       context: backend
       dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - redis
     volumes:
       - "./backend/.env:/app/.env"
       - "./volumes/backend:/app/data"
-    ports:
-      - "8000:8000"
     deploy:
       resources:
         limits:
@@ -27,6 +27,8 @@ services:
     build:
       context: frontend
       dockerfile: Dockerfile
+    depends_on:
+      - backend
     deploy:
       resources:
         limits:
@@ -37,7 +39,10 @@ services:
     image: nginx:1.25.4-alpine
     ports:
       - "80:80"
-    links:
+      - "443:443"
+      - "8000:8000"
+    depends_on:
+      - backend
       - frontend
     volumes:
       - ./volumes/nginx/raw_nginx.conf:/etc/nginx/conf.d/default.conf
