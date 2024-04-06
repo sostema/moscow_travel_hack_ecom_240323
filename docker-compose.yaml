@@ -7,7 +7,7 @@ services:
       _UVICORN__HOST: "0.0.0.0"
       _UVICORN__PORT: 8000
       _UVICORN__SSL: "true"
-      # _UVICORN__SSL_KEYFILE: "data/certs/privkey.pem"
+      _UVICORN__SSL_KEYFILE: "data/certs/privkey.pem"
       _UVICORN__SSL_CERTFILE: "data/certs/fullchain.pem"
       _REDIS__HOST: "redis"
       _PG__HOST: "postgres"
