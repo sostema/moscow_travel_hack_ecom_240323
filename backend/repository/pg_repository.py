@@ -10,7 +10,7 @@ from schemas.event import Event, Events
 from shared.base import logger
 from shared.settings import app_settings
 from shared.ulid import ulid_as_uuid
-from sqlalchemy import create_engine, insert, select, text
+from sqlalchemy import create_engine, desc, insert, select, text
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.schema import CreateTable
@@ -86,13 +86,29 @@ class PgRepository:
 
     def get_events(self) -> Events:
         with self._engine.connect() as session:
-            rows = session.execute(select(EventDB)).scalars().all()
+            rows = session.execute(select(EventDB)).fetchall()
 
-        events = Events(events=[])
+        events = []
         for row in rows:
             try:
-                events.events.append(Event.from_orm(row))
+                events.append(
+                    Event(
+                        id=row.internal_id,
+                        type=row.type,
+                        restaurant_type=row.restaurant_type,
+                        name=row.name,
+                        description=row.description,
+                        link=row.link,
+                        img_link=row.img_link,
+                        price=row.price,
+                        address=row.address,
+                        lat=row.lat,
+                        lng=row.lng,
+                        time=None,
+                        distance=None,
+                    )
+                )
             except ValidationError:
-                logger.error(f"failed to validate event from db, row: {row}")
+                logger.exception(f"failed to validate event from db, row: {row}")
 
-        return events
+        return Events(events=events)

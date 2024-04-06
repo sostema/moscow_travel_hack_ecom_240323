@@ -21,7 +21,7 @@ class Entity(Base):
 class Event(Entity):
     __tablename__ = "event"
 
-    type = Column(TEXT)
+    type_ = Column("type", TEXT)
     restaurant_type = Column(ARRAY(TEXT))
     name = Column(TEXT)
     description = Column(TEXT)
