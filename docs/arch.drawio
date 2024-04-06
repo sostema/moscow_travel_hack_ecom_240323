@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e" scale="1" border="10">
     <diagram id="KqGvIRFhO_OHiRRsd4W4" name="Page-1">
-        <mxGraphModel dx="1176" dy="816" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#ffffff" math="0" shadow="0">
+        <mxGraphModel dx="828" dy="527" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -38,7 +38,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="37" value="Хранение операционные данные&lt;br&gt;Хранение векторного представления&lt;br&gt;текстовых данных" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="36" vertex="1" connectable="0">
+                <mxCell id="37" value="Хранение операционных данных&lt;br&gt;Хранение векторного представления&lt;br&gt;текстовых данных" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="36" vertex="1" connectable="0">
                     <mxGeometry x="0.1254" y="2" relative="1" as="geometry">
                         <mxPoint x="2" y="72" as="offset"/>
                     </mxGeometry>
@@ -49,13 +49,13 @@
                         <mxPoint x="200" y="134.99500000000012" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="43" value="PG+PGVector" style="aspect=fixed;html=1;points=[];align=center;image;fontSize=12;image=img/lib/azure2/databases/Azure_Database_PostgreSQL_Server.svg;" vertex="1" parent="8">
+                <mxCell id="43" value="PG+PGVector" style="aspect=fixed;html=1;points=[];align=center;image;fontSize=12;image=img/lib/azure2/databases/Azure_Database_PostgreSQL_Server.svg;" parent="8" vertex="1">
                     <mxGeometry x="391.59000000000003" y="290" width="48" height="64" as="geometry"/>
                 </mxCell>
-                <mxCell id="44" value="Python &lt;br&gt;Backend" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.android;fillColor=#FFD44F;gradientColor=none;" vertex="1" parent="8">
+                <mxCell id="44" value="Python &lt;br&gt;Backend" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.android;fillColor=#FFD44F;gradientColor=none;" parent="8" vertex="1">
                     <mxGeometry x="195.22000000000003" y="93" width="73.5" height="84" as="geometry"/>
                 </mxCell>
-                <mxCell id="49" value="React&lt;br&gt;Frontend" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.node_generic;fillColor=#2072B8;" vertex="1" parent="8">
+                <mxCell id="49" value="React&lt;br&gt;Frontend" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.node_generic;fillColor=#2072B8;" parent="8" vertex="1">
                     <mxGeometry x="70" y="109" width="46" height="52" as="geometry"/>
                 </mxCell>
                 <mxCell id="33" style="edgeStyle=none;html=1;" parent="1" target="48" edge="1">
@@ -69,7 +69,7 @@
                         <mxPoint x="-6" y="13" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="48" value="Gigachat" style="sketch=0;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.databases.database;fillColor=#7FBA42;" vertex="1" parent="1">
+                <mxCell id="48" value="Gigachat" style="sketch=0;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.databases.database;fillColor=#7FBA42;" parent="1" vertex="1">
                     <mxGeometry x="575" y="310" width="35" height="49" as="geometry"/>
                 </mxCell>
             </root>

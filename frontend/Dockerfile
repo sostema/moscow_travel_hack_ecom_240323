@@ -1,6 +1,7 @@
 FROM node:21.7.2-bookworm
 
-RUN npm i -g serve
+RUN npm install --global yarn serve
+RUN yarn
 
 COPY . /app
 
