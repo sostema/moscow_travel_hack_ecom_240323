@@ -9,15 +9,10 @@ from shared.base import logger
 router = APIRouter(prefix="")
 
 
-class Tags(str, enum.Enum):
-    SERVICE = "service"
-
-
 @router.get(
     "/health",
     response_model=HealthResponse,
     response_model_exclude_none=True,
-    tags=[Tags.SERVICE],
 )
 async def check_server_health() -> UJSONResponse:
     """
