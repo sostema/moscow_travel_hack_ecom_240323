@@ -43,10 +43,7 @@ services:
     links:
       - frontend
     volumes:
-      - ./volumes/nginx/raw_nginx.conf:/etc/nginx/conf.d/default.conf
-      # - ./volumes/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      # - /etc/letsencrypt:/etc/letsencrypt
-      # - /data/letsencrypt:/data/letsencrypt
+      - ./volumes/nginx/ssl_nginx.conf:/etc/nginx/conf.d/default.conf
 
   redis:
     image: redis:7.2.3-bookworm
