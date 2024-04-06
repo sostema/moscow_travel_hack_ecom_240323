@@ -5,13 +5,13 @@ from langchain.prompts import load_prompt
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 
-def summarize(llm: GigaChat, document_list: list[Document]) -> str:
+def summarize(llm: GigaChat, text_list: list[str]) -> str:
     text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
         chunk_size=256, chunk_overlap=64
     )
-    document_splits = text_splitter.split_documents(document_list)
-    map_prompt = load_prompt("./prompts/summarize_map_system.yaml")
-    combine_prompt = load_prompt("./prompts/summarize_combine_system.yaml")
+    document_splits = text_splitter.create_documents(text_list)
+    map_prompt = load_prompt("src/mthe_ml/prompts/summarize_map_system.yaml")
+    combine_prompt = load_prompt("src/mthe_ml/prompts/summarize_combine_system.yaml")
     summarize_chain = load_summarize_chain(
         llm,
         map_prompt=map_prompt,
