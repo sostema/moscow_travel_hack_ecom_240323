@@ -3,7 +3,7 @@ import enum
 from schemas.base import CamelizedBaseModel
 
 
-class HealthStatuses(str, enum.Enum):
+class HealthStatuses(enum.StrEnum):
     OK = "OK"
     ERR = "ERR"
 

@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 
-from pydantic import TypeAdapter
 from repository.redis_repository import RedisRepository
-from schemas.base import CamelizedBaseModel
+from schemas.message import Message, Messages
 from shared.base import logger
 from shared.ulid import ulid_as_uuid
 from supplier.gigachat_supplier import GigachatSupplier
@@ -10,11 +9,6 @@ from supplier.gigachat_supplier import GigachatSupplier
 
 class HistoryNotFound(Exception):
     ...
-
-
-class Message(CamelizedBaseModel):
-    content: str
-    type: str
 
 
 @dataclass
@@ -25,24 +19,27 @@ class ChatService:
     def _get_path_messages(self, history_id: str) -> str:
         return f"chat::{history_id}"
 
-    def get_history(self, history_id: str) -> list[Message]:
+    def get_history(self, history_id: str) -> Messages:
         history_raw = self.redis_repository.rget(self._get_path_messages(history_id))
+        if history_raw is None:
+            raise HistoryNotFound()
 
-        messages = TypeAdapter(list[Message]).validate_json(history_raw)
+        history = Messages.parse_raw(history_raw.decode())
         filtered_messages = []
-        for message in messages:
-            if message.type == "system":
+        for message in history.messages:
+            if message.chain_message.type == "system":
                 continue
             filtered_messages.append(message)
 
-        return filtered_messages
+        history.messages = filtered_messages
+        return history
 
     def get_all_histories(self) -> list[str]:
         histories = self.redis_repository.keys(self._get_path_messages("*"))
 
         return [history_id.decode().split("::")[1] for history_id in histories]
 
-    def send_message(self, message: str, history_id: str | None) -> tuple[str, str]:
+    def send_message(self, message: str, history_id: str | None) -> tuple[Message, str]:
         if history_id is None:
             history_id = str(ulid_as_uuid())
             history = None
@@ -53,12 +50,12 @@ class ChatService:
             )
             if history_raw is None:
                 raise HistoryNotFound()
-            history = self.gigachat_supplier.load_message_history(history_raw.decode())
+            history = Messages.parse_raw(history_raw.decode())
 
         history = self.gigachat_supplier.message(message, history=history)
         logger.info("Chat history: {}, history_id: {}", history, history_id)
 
-        history_dumped = self.gigachat_supplier.dump_message_history(history)
+        history_dumped = history.json()
         self.redis_repository.rset(self._get_path_messages(history_id), history_dumped)
 
-        return str(history[-1].content), history_id
+        return history.messages[-1], history_id

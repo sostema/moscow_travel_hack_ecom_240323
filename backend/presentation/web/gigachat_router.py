@@ -1,27 +1,28 @@
 from fastapi import APIRouter, Cookie, Header, HTTPException, Request, Response, status
 from presentation.dependencies import container
 from schemas.base import CamelizedBaseModel
-from service.chat_service import HistoryNotFound, Message
+from schemas.message import Message, Messages
+from service.chat_service import HistoryNotFound
 
 router = APIRouter(prefix="/gigachat")
 
 
-class Prompt(CamelizedBaseModel):
-    text: str
+class UserMessage(CamelizedBaseModel):
+    content: str
 
 
 @router.post("/messages")
 def send_message(
     response: Response,
-    prompt: Prompt = Prompt(text="Привет, как дела?"),
+    prompt: UserMessage = UserMessage(content="Привет, как дела?"),
     history_id: str | None = Cookie(None),
-) -> Prompt:
+) -> Message:
     """
     Отправляет промпт в гигачат. Возвращает X-History-Id, который можно использовать для консистентности истории.
     """
     try:
         chat_response, history_id = container.chat_service.send_message(
-            prompt.text, history_id=history_id
+            prompt.content, history_id=history_id
         )
     except HistoryNotFound:
         raise HTTPException(
@@ -30,11 +31,11 @@ def send_message(
 
     response.set_cookie(key="history_id", value=history_id)
 
-    return Prompt(text=chat_response)
+    return chat_response
 
 
 @router.post("/messages/history")
-def get_history(history_id: str | None = Cookie(None)) -> list[Message]:
+def get_history(history_id: str | None = Cookie(None)) -> Messages:
     """
     Возвращает историю сообщений по ID
     """

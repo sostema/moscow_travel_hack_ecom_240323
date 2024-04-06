@@ -1,7 +1,6 @@
 import multiprocessing as mp
 
-from pydantic import BaseModel
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import BaseSettings
 
 
 class AppSettings(BaseSettings):
@@ -24,7 +23,10 @@ class AppSettings(BaseSettings):
     gigachat_client_id: str
     gigachat_scope: str
 
-    model_config = SettingsConfigDict(env_file=".env", env_prefix="_")
+    class Config:
+        env_file = ".env"
+        env_prefix = "_"
+        env_nested_delimiter = "__"
 
 
 app_settings = AppSettings()

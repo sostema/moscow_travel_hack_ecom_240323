@@ -12,12 +12,6 @@ class EventType(StrEnum):
     WALK = "WALK"
 
 
-# TODO rename to more meaningfull name
-class TimeDistance(CamelizedBaseModel):
-    time: int = Field(..., description="in seconds")
-    distance: float = Field(..., description="in KM")
-
-
 class Event(CamelizedBaseModel):
     id_: uuid.UUID = Field(..., alias="id")
     type_: EventType = Field(..., alias="type")
@@ -31,7 +25,8 @@ class Event(CamelizedBaseModel):
     lat: float | None = None
     lng: float | None = None
 
-    time_distance: TimeDistance | None = None
+    time: int | None = Field(None, description="in seconds")
+    distance: float | None = Field(None, description="in KM")
 
 
 example_events = [
@@ -46,7 +41,8 @@ example_events = [
         address=None,
         lat=None,
         lng=None,
-        time_distance=None,
+        time=None,
+        distance=None,
     )
 ] * 6
 
@@ -54,8 +50,8 @@ example_events = [
 class Events(CamelizedBaseModel):
     events: list[Event]
 
-    model_config = {
-        "json_schema_extra": {
-            "examples": [{"events": [example_events[0].jsonable_encoder()] * 6}]
-        }
-    }
+
+class Route(CamelizedBaseModel):
+    events: list[Event]
+    time: int | None = Field(None, description="in seconds")
+    distance: float | None = Field(None, description="in KM")
