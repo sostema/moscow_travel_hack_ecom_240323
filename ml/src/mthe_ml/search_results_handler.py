@@ -3,24 +3,24 @@ from typing import Any
 from langchain.prompts import PromptTemplate, load_prompt
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
 
-system_prompt_template = load_prompt("./prompts/search_system.yaml")
+system_prompt_template = load_prompt("src/mthe_ml/prompts/search_system.yaml")
 
 
 def generate_metadata_string(event_type: str, metadata: dict[str, Any]) -> str:
     if event_type == "restaurant":
         price_info = (
             f"Средний чек в ресторане составляет {metadata['price']}"
-            if "price" in metadata
+            if "price" in metadata and metadata["price"]
             else ""
         )
         kitchen_type_info = (
-            f'В ресторане представлены следующие кухни: {"- ".join(metadata['kitchen_type'])}'
-            if "kitchen_type" in metadata
+            f'В ресторане представлены следующие кухни: {"- ".join(metadata["kitchen_type"])}'
+            if "kitchen_type" in metadata and metadata["kitchen_type"]
             else ""
         )
         location_info = (
-            f'Ресторан находится по адресу: {metadata['location']}'
-            if "location" in metadata
+            f'Ресторан находится по адресу: {metadata["location"]}'
+            if "location" in metadata and metadata["location"]
             else ""
         )
         metadata_info = "\n".join(
@@ -28,7 +28,7 @@ def generate_metadata_string(event_type: str, metadata: dict[str, Any]) -> str:
         ).strip()
     elif event_type == "event":
         price_info = ""
-        if "price" in metadata:
+        if "price" in metadata and metadata["price"]:
             if metadata["price"] > 0:
                 price_info = f"Цена посещения составляет {metadata['price']}"
             else:
@@ -41,13 +41,14 @@ def generate_metadata_string(event_type: str, metadata: dict[str, Any]) -> str:
 
 def get_event_from_db(event_id: int) -> tuple[str, str, str, dict[str, Any]]:
     # mockup
-    return "event_name", "event_text", "event", {"price": 120}
+    return "event_name", "event_text", "event_type", {"price": 120}
 
 
-def generate_messages_for_chat(event_id: int) -> list[BaseMessage]:
+def generate_messages_for_chat(user_input: str, event_id: int) -> list[BaseMessage]:
     event_name, event_text, event_type, event_metadata = get_event_from_db(id=event_id)
     metadata_string = generate_metadata_string(event_type, event_metadata)
     system_message = system_prompt_template.format(
+        user_input_text=user_input,
         event_name=event_name,
         event_description=event_text,
         event_metadata=metadata_string,

@@ -1,7 +1,8 @@
-input_variables: [event_name, event_description, event_metadata]
+input_variables: [user_input_text, event_name, event_description, event_metadata]
 partial_variables:
     event_type: 'мероприятие'
 template: 'Ты - умный ассистент для поиска мероприятий в системе RUSSPASS.
+Пользователь искал события по следующему запросу: "{user_input_text}"
 Наиболее подходящее событие для пользователя, найденное рекомендательной системой, это {event_type}: "{event_name}", его краткое описание:
 
 "{event_description}"
