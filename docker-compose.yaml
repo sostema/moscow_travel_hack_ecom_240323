@@ -83,7 +83,7 @@ services:
           memory: 100M
 
   postgres:
-    image: postgres:16.2-bookworm
+    image: ankane/pgvector:v0.3.1
     environment:
       POSTGRES_DB: db_main
       POSTGRES_USER: db_main
@@ -91,6 +91,8 @@ services:
       PGUSER: db_main
       PGPASSWORD: db_main
       PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
     labels:
       - "autoheal=true"
     restart: unless-stopped
@@ -105,8 +107,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.50'
-          memory: 1000M
+          cpus: '2.00'
+          memory: 4000M
 
   autoheal:
     restart: always
