@@ -22,7 +22,9 @@ def init_combat_container() -> Container:
     )
 
     gigachat_supplier = GigachatSupplier(redis_repository=redis_repository)
-    chat_service = ChatService(gigachat_supplier=gigachat_supplier)
+    chat_service = ChatService(
+        gigachat_supplier=gigachat_supplier, redis_repository=redis_repository
+    )
 
     return Container(
         heath_service=heath_service,

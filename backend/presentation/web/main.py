@@ -24,7 +24,7 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     app.include_router(router.router)
-    gigachat_router.add_router(app)
+    app.include_router(gigachat_router.router)
 
     @app.on_event("startup")
     async def startup() -> None:

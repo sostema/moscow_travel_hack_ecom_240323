@@ -2,13 +2,17 @@ import re
 from dataclasses import dataclass
 
 import redis
+import ujson
 from langchain.cache import RedisCache
 from langchain.chat_models.gigachat import GigaChat
 from langchain.globals import set_llm_cache
-from langchain.schema import HumanMessage
+from langchain.schema import AIMessage, HumanMessage
 from langchain_core.runnables.history import RunnableWithMessageHistory
+from loguru import logger
 from repository.redis_repository import RedisRepository
 from shared.settings import app_settings
+
+message_history = list[AIMessage | HumanMessage]
 
 
 @dataclass
@@ -22,11 +26,35 @@ class GigachatSupplier:
         )
         set_llm_cache(RedisCache(self.redis_repository.r))
 
-    def single_message(self, prompt: str) -> str:
-        messages = [HumanMessage(content=prompt)]
-        res = self.chat(messages)
+    def dump_message_history(self, history: message_history) -> str:
+        jsonable = []
+        for message in history:
+            jsonable.append({"content": message.content, "type": message.type})
+        return ujson.dumps(jsonable, ensure_ascii=False)
 
-        return str(res.content)
+    def load_message_history(self, jsonable: str) -> message_history:
+        history = []
+        for message in ujson.loads(jsonable):
+            if message["type"] == "human":
+                history.append(HumanMessage(content=message["content"]))
+            else:
+                history.append(AIMessage(content=message["content"]))
+
+        return history
+
+    def message(
+        self, prompt: str, history: message_history | None = None
+    ) -> message_history:
+        if history is None:
+            history = []
+
+        history.append(HumanMessage(content=prompt))
+        res = self.chat(history)
+        history.append(AIMessage(content=res.content))
+
+        logger.info("New chat history: {}", history)
+
+        return history
 
     def translate_to_english(self, prompt: str) -> str:
         is_eng = re.match(r"^[a-zA-Z0-9\W]*$", prompt)
