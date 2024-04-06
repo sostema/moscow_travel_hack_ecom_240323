@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from repository.redis_repository import RedisRepository
+from shared.base import logger
 from shared.ulid import ulid_as_uuid
 from supplier.gigachat_supplier import GigachatSupplier
 
@@ -25,6 +26,8 @@ class ChatService:
             history = self.gigachat_supplier.load_message_history(history_raw.decode())
 
         history = self.gigachat_supplier.message(message, history=history)
+        logger.info("Chat history: {}, history_id: {}", history, history_id)
+
         history_dumped = self.gigachat_supplier.dump_message_history(history)
         self.redis_repository.rset(history_id, history_dumped)
 

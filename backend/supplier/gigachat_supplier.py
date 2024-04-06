@@ -1,15 +1,10 @@
 import re
 from dataclasses import dataclass
 
-import redis
 import ujson
-from langchain.cache import RedisCache
 from langchain.chat_models.gigachat import GigaChat
-from langchain.globals import set_llm_cache
 from langchain.schema import AIMessage, HumanMessage
-from langchain_core.runnables.history import RunnableWithMessageHistory
 from loguru import logger
-from repository.redis_repository import RedisRepository
 from shared.settings import app_settings
 
 message_history = list[AIMessage | HumanMessage]
@@ -17,14 +12,11 @@ message_history = list[AIMessage | HumanMessage]
 
 @dataclass
 class GigachatSupplier:
-    redis_repository: RedisRepository
-
     def __post_init__(self) -> None:
         self.chat = GigaChat(
             credentials=app_settings.gigachat_auth_key,
             verify_ssl_certs=False,
         )
-        set_llm_cache(RedisCache(self.redis_repository.r))
 
     def dump_message_history(self, history: message_history) -> str:
         jsonable = []
@@ -51,8 +43,6 @@ class GigachatSupplier:
         history.append(HumanMessage(content=prompt))
         res = self.chat(history)
         history.append(AIMessage(content=res.content))
-
-        logger.info("New chat history: {}", history)
 
         return history
 
