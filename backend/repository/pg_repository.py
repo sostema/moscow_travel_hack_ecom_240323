@@ -87,6 +87,7 @@ class PgRepository:
                         lat=event.lat,
                         lng=event.lng,
                         internal_id=ulid_as_uuid(),
+                        reviews=event.reviews,
                     )
                 )
             session.commit()

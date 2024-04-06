@@ -25,6 +25,7 @@ class Event(CamelizedBaseModel):
     address: str | None = None
     lat: float | None = None
     lng: float | None = None
+    reviews: list[str] | None = None
 
     time: int | None = Field(None, description="in seconds")
     distance: float | None = Field(None, description="in KM")

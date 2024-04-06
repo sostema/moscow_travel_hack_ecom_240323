@@ -23,6 +23,7 @@ class Event(Entity):
 
     type_ = Column("type", TEXT)
     restaurant_type = Column(ARRAY(TEXT))
+    reviews = Column(ARRAY(TEXT))
     name = Column(TEXT)
     description = Column(TEXT)
     link = Column(TEXT)
