@@ -58,6 +58,9 @@ services:
     command: redis-server --save 20 1 --loglevel warning
     volumes:
       - ./volumes/redis/:/data
+    ports:
+      # TODO remove in production
+      - "6379:6379"
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
       interval: 2m
@@ -80,6 +83,7 @@ services:
       PGPASSWORD: db_main
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
+      # TODO remove in production
       - "5432:5432"
     labels:
       - "autoheal=true"
