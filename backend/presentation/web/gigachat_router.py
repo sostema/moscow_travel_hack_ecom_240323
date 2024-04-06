@@ -1,31 +1,40 @@
 import enum
 
-from fastapi import APIRouter, Header, Response, status
+from fastapi import APIRouter, Header, HTTPException, Response, status
 from fastapi.responses import UJSONResponse
 from presentation.dependencies import container
 from presentation.web.schemas import HealthResponse, HealthStatuses
 from schemas.base import CamelizedBaseModel
+from service.chat_service import HistoryNotFound
 from shared.base import logger
 
 router = APIRouter(prefix="/gigachat")
 
 
 class Prompt(CamelizedBaseModel):
-    prompt: str
+    text: str
 
 
 @router.post("/prompt")
 def send_message(
     response: Response,
-    prompt: Prompt,
+    prompt: Prompt = Prompt(text="Привет, как дела?"),
     history_id: str | None = Header(None, alias="X-History-Id"),
-) -> str:
+) -> Prompt:
+    """
+    Отправляет промпт в гигачат. Возвращает X-History-Id, который можно использовать для консистентности истории.
+    """
     if history_id is not None:
         response.headers["X-History-Id"] = history_id
 
-    chat_response, history_id = container.chat_service.send_message(
-        prompt.prompt, history_id=history_id
-    )
+    try:
+        chat_response, history_id = container.chat_service.send_message(
+            prompt.text, history_id=history_id
+        )
+    except HistoryNotFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="history not found"
+        ) from HistoryNotFound
     response.headers["X-History-Id"] = history_id
 
-    return chat_response
+    return Prompt(text=chat_response)

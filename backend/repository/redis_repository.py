@@ -16,8 +16,8 @@ class RedisRepository:
     def rset(self, k: str, v: str) -> None:
         self.r.set(k, v)
 
-    def rget(self, k: str) -> str:
-        return self.r.get(k).decode()
+    def rget(self, k: str) -> bytes | None:
+        return self.r.get(k)
 
     async def health(self) -> None:
         if not await self.ar.ping():
