@@ -25,6 +25,9 @@ aiohttp = "^3.8.6"
 requests = "^2.31.0"
 pydantic = "^2.6.4"
 greenlet = "^3.0.3"
+gigachain = "^0.1.13.2"
+langserve = "^0.0.51"
+sse-starlette = "^2.1.0"
 
 
 [build-system]

@@ -26,4 +26,4 @@ update:
 	docker compose logs -f backend
 
 logs:
-	docker compose logs -f backend
+	docker compose logs -f backend autoheal

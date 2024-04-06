@@ -4,13 +4,13 @@ services:
   backend:
     restart: always
     environment:
-      _UVICORN__HOST: "0.0.0.0"
-      _UVICORN__PORT: 8000
-      _UVICORN__SSL: "true"
-      _UVICORN__SSL_KEYFILE: "data/certs/privkey.pem"
-      _UVICORN__SSL_CERTFILE: "data/certs/fullchain.pem"
-      _REDIS__HOST: "redis"
-      _PG__HOST: "postgres"
+      _UVICORN_HOST: "0.0.0.0"
+      _UVICORN_PORT: 8000
+      _UVICORN_SSL: "true"
+      _UVICORN_SSL_KEYFILE: "data/certs/privkey.pem"
+      _UVICORN_SSL_CERTFILE: "data/certs/fullchain.pem"
+      _REDIS_HOST: "redis"
+      _PG_HOST: "postgres"
     build:
       context: backend
       dockerfile: Dockerfile

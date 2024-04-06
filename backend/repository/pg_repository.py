@@ -9,8 +9,8 @@ from sqlalchemy.ext.asyncio import create_async_engine
 class PgRepository:
     def __post_init__(self) -> None:
         self._engine = create_async_engine(
-            f"postgresql+asyncpg://{app_settings.pg.username}:{app_settings.pg.password}@"
-            f"{app_settings.pg.host}:{app_settings.pg.port}/{app_settings.pg.database}",
+            f"postgresql+asyncpg://{app_settings.pg_username}:{app_settings.pg_password}@"
+            f"{app_settings.pg_host}:{app_settings.pg_port}/{app_settings.pg_database}",
         )
 
     async def health(self) -> None:
