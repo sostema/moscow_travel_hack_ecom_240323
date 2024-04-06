@@ -3,10 +3,11 @@ from dataclasses import dataclass
 from langchain.docstore.document import Document
 from langchain.embeddings import SentenceTransformerEmbeddings
 from langchain_community.vectorstores.pgvector import PGVector
+from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from persistence.database import Event as EventDB
 from pydantic import ValidationError
-from schemas.event import Event, Events
+from schemas.event import Event, Events, EventType
 from shared.base import logger
 from shared.settings import app_settings
 from shared.ulid import ulid_as_uuid
@@ -34,12 +35,18 @@ class PgRepository:
         self.embedding_model = SentenceTransformerEmbeddings(
             model_name="cointegrated/rubert-tiny2"
         )
-        self.pg_vector = PGVector(
-            collection_name="db_main",
-            connection_string=con_string,
-            embedding_function=self.embedding_model,
-        )
-        self.retriever = self.pg_vector.as_retriever()
+        self.event_type_to_store: dict[EventType, VectorStoreRetriever] = {
+            EventType.EVENT: PGVector(
+                collection_name="vector_collection_event",
+                connection_string=con_string,
+                embedding_function=self.embedding_model,
+            ).as_retriever(search_type="mmr"),
+            EventType.RESTAURANT: PGVector(
+                collection_name="vector_collection_restaurant",
+                connection_string=con_string,
+                embedding_function=self.embedding_model,
+            ).as_retriever(search_type="mmr"),
+        }
         self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=512)
 
     async def health(self) -> None:

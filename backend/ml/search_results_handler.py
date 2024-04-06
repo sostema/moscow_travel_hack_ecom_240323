@@ -45,7 +45,9 @@ def get_event_from_db(event_id: int) -> tuple[str, str, str, dict[str, Any]]:
 
 
 def generate_messages_for_chat(user_input: str, event_id: int) -> list[BaseMessage]:
-    event_name, event_text, event_type, event_metadata = get_event_from_db(id=event_id)
+    event_name, event_text, event_type, event_metadata = get_event_from_db(
+        event_id=event_id
+    )
     metadata_string = generate_metadata_string(event_type, event_metadata)
     system_message = system_prompt_template.format(
         user_input_text=user_input,
