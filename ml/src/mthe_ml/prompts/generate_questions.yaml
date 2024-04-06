@@ -1,0 +1,11 @@
+input_variables: [text]
+partial_variables:
+    combine_size: '2-3 предложения'
+    event_type: 'ресторана'
+template: 'Используя описание {event_type} сгенерируй отзыв на {combine_size}.
+
+"{text}"
+
+Отзыв после посещения {event_type} на {combine_size}:'
+template_format: f-string
+_type: prompt

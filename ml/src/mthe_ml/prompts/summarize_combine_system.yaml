@@ -1,0 +1,11 @@
+input_variables: [text]
+partial_variables:
+    combine_size: '5 ключевых понятий'
+template: 'Суммаризируй части отзывов в один текст на {combine_size}.
+
+"{text}"
+
+Теперь суммаризируй части отзывов в один текст на {combine_size}.
+Ключевые выдержки из отзывов:'
+template_format: f-string
+_type: prompt

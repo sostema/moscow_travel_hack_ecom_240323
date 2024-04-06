@@ -18,7 +18,6 @@ class GigaChatSettings(BaseSettings):
 class PGVectorSettings(BaseSettings):
     host: str
     pwd: str
-    connection_name: str
 
     model_config = SettingsConfigDict(
         extra="allow",
@@ -30,3 +29,5 @@ class PGVectorSettings(BaseSettings):
 
 gigachat_settings = GigaChatSettings()
 pgvector_settings = PGVectorSettings()
+
+pgvector_connection_string = f"postgresql+psycopg2://db_main:{pgvector_settings.pwd}@{pgvector_settings.host}:5432/db_main"

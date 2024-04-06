@@ -1,0 +1,12 @@
+input_variables: [categories, text]
+output_parser: null
+template: 'Классифицируй, какой тип мероприятия наиболее подходит для пользователя учитывая его сообщения.
+Сообщения:
+
+"{text}"
+
+Категории: {categories}
+
+В ответе укажи только категорию, одну из предоставленных выше'
+template_format: f-string
+_type: prompt
