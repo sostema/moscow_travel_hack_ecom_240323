@@ -1,13 +1,9 @@
-import re
 from dataclasses import dataclass
 
-import ujson
 from langchain.chat_models.gigachat import GigaChat
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
+from langchain.schema import HumanMessage, SystemMessage
 from schemas.message import Message, Messages
 from shared.settings import app_settings
-
-# message_history = list[AIMessage | HumanMessage | SystemMessage]
 
 
 @dataclass
@@ -33,8 +29,6 @@ class GigachatSupplier:
             Message.from_chain_message(HumanMessage(content=prompt))
         )
         res = self.chat(history.extract_chain_message())
-        history.messages.append(
-            Message.from_chain_message(AIMessage(content=res.content))
-        )
+        history.messages.append(Message.from_chain_message(res))
 
         return history

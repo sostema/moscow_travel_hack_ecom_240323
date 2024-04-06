@@ -55,6 +55,22 @@ def get_history(history_id: str | None = Cookie(None)) -> Messages:
     return history
 
 
+@router.delete("/messages/history")
+def reset_history(response: Response, history_id: str | None = Cookie(None)) -> None:
+    """
+    Возвращает историю сообщений по ID
+    """
+    if history_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="history id required",
+        )
+
+    response.delete_cookie(key="history_id")
+
+    return None
+
+
 @router.post("/messages/history/all")
 def get_all_histories() -> list[str]:
     """

@@ -40,6 +40,8 @@ class ChatService:
         return [history_id.decode().split("::")[1] for history_id in histories]
 
     def send_message(self, message: str, history_id: str | None) -> tuple[Message, str]:
+        logger.debug("Sending message in history_id: {}", history_id)
+
         if history_id is None:
             history_id = str(ulid_as_uuid())
             history = None
