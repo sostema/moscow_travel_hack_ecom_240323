@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from langchain.chat_models.gigachat import GigaChat
-from langchain.schema import HumanMessage, SystemMessage
+from langchain.schema import BaseMessage, HumanMessage, SystemMessage
 from schemas.message import Message, Messages
 from shared.settings import app_settings
 
@@ -32,3 +32,6 @@ class GigachatSupplier:
         history.messages.append(Message.from_chain_message(res))
 
         return history
+
+    def send_message(self, messages: BaseMessage) -> BaseMessage:
+        return self.chat(messages)
