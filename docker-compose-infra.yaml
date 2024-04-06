@@ -1,23 +1,18 @@
 version: '3.1'
 
 services:
+
   redis:
     image: redis:7.2.3-bookworm
     restart: always
-    ports:
-      - "6379:6379"
     command: redis-server --save 20 1 --loglevel warning
     volumes:
       - ./volumes/redis/:/data
-    healthcheck:
-      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
-      interval: 2m
-      timeout: 20s
-      retries: 3
-      start_period: 5s
+    ports:
+      - "6379:6379"
 
   postgres:
-    image: postgres:16.2-bookworm
+    image: ankane/pgvector:v0.3.1
     environment:
       POSTGRES_DB: db_main
       POSTGRES_USER: db_main
@@ -31,8 +26,3 @@ services:
     volumes:
       - ./extra/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./volumes/pg/:/var/lib/postgresql/data/
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
