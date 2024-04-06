@@ -1,7 +1,7 @@
 PYTHON ?= .venv/bin/python
 
 frontend-run:
-	cd backend && $(PYTHON) web_entrypoint.py
+	cd backend && serve .
 
 backend-install:
 	cd backend && python3.11 -m venv .venv

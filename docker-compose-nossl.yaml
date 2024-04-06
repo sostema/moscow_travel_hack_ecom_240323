@@ -5,9 +5,7 @@ services:
     environment:
       _UVICORN_HOST: "0.0.0.0"
       _UVICORN_PORT: 8000
-      _UVICORN_SSL: "true"
-      _UVICORN_SSL_KEYFILE: "data/certs/privkey.pem"
-      _UVICORN_SSL_CERTFILE: "data/certs/fullchain.pem"
+      _UVICORN_SSL: "false"
       _REDIS_HOST: "redis"
       _PG_HOST: "postgres"
     build:
@@ -39,14 +37,10 @@ services:
     image: nginx:1.25.4-alpine
     ports:
       - "80:80"
-      - "443:443"
     links:
       - frontend
     volumes:
       - ./volumes/nginx/raw_nginx.conf:/etc/nginx/conf.d/default.conf
-      # - ./volumes/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      # - /etc/letsencrypt:/etc/letsencrypt
-      # - /data/letsencrypt:/data/letsencrypt
 
   redis:
     image: redis:7.2.3-bookworm

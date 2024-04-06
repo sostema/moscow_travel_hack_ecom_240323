@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:21.7.2-bookworm
 
 RUN npm i -g serve
 
@@ -6,4 +6,4 @@ COPY . /app
 
 WORKDIR /app
 
-CMD [ "serve" "."]
+CMD [ "serve" ]
