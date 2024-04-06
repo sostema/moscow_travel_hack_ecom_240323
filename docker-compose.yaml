@@ -10,6 +10,9 @@ services:
     build:
       context: backend
       dockerfile: Dockerfile
+    link:
+      - redis
+      - postgres
     volumes:
       - "./backend/.env:/app/.env"
       - "./volumes/backend:/app/data"
@@ -24,6 +27,8 @@ services:
     build:
       context: frontend
       dockerfile: Dockerfile
+    link:
+      - backend
     deploy:
       resources:
         limits:
@@ -38,6 +43,7 @@ services:
       - "8000:8000"
     links:
       - frontend
+      - backend
     volumes:
       - ./volumes/nginx/ssl_nginx.conf:/etc/nginx/conf.d/default.conf
       - /etc/letsencrypt:/etc/letsencrypt
