@@ -2,6 +2,7 @@
 **/CA.pem
 volumes/*
 frontend/node_modules
+backend/cite_data.json
 
 ### SAM BUILD ###
 **/.aws-sam
