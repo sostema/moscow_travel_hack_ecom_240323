@@ -15,9 +15,24 @@
 - `postgres` - реляционая СУБД с расширением pg-vector
 
 #### Запуск решения
+##### В докере
+C ssl
 ```bash
-# Установить docker
 docker compose up # С SSL
+```
+Без ssl
+```bash
+docker compose -f docker-compose-nossl.yaml up
+```
+Локально
+```bash
+make frontend-install
 
-# docker compose -f docker-compose-nossl.yaml up # Без ssl
+make backend-install
+
+make infra-run
+
+make frontend-run # В отдельном терминале
+
+make backend-run # В отдельном терминале
 ```
