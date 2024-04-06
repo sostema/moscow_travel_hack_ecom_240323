@@ -21,7 +21,7 @@ def init_combat_container() -> Container:
         redis_repository=redis_repository, pg_repository=pg_repository
     )
 
-    gigachat_supplier = GigachatSupplier(redis_repository=redis_repository)
+    gigachat_supplier = GigachatSupplier()
     chat_service = ChatService(
         gigachat_supplier=gigachat_supplier, redis_repository=redis_repository
     )
