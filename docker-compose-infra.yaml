@@ -15,11 +15,6 @@ services:
       timeout: 20s
       retries: 3
       start_period: 5s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 100M
 
   postgres:
     image: postgres:16.2-bookworm
@@ -41,8 +36,3 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 1000M
