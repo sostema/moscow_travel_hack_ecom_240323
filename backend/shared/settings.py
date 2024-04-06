@@ -16,7 +16,7 @@ class AppSettings(BaseSettings):
 
     uvicorn_host: str = "localhost"
     uvicorn_port: int = 8000
-    uvicorn_workers: int = mp.cpu_count() * 2
+    uvicorn_workers: int = mp.cpu_count()
     uvicorn_log_level: str = "WARNING"
     uvicorn_ssl: bool = False
     uvicorn_ssl_keyfile: str | None = None

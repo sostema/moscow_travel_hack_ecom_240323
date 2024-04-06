@@ -21,17 +21,11 @@ services:
       - "8000:8000"
     labels:
       - "autoheal=true"
-    healthcheck:
-      test: curl -f http://127.0.0.1:8000/health || exit 1
-      interval: 2m
-      timeout: 20s
-      retries: 3
-      start_period: 5s
     deploy:
       resources:
         limits:
-          cpus: '0.75'
-          memory: 1800M
+          cpus: '3.00'
+          memory: 3000M
 
   # frontend:
   #   restart: always
@@ -71,7 +65,7 @@ services:
       resources:
         limits:
           cpus: '0.50'
-          memory: 100M
+          memory: 1000M
 
   postgres:
     image: ankane/pgvector:v0.3.1
