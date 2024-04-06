@@ -20,6 +20,7 @@ class ChatService:
             history_id = str(ulid_as_uuid())
             history = None
         else:
+            # TODO posible racecond, rewrite using pessimistic lock
             history_raw = self.redis_repository.rget(history_id)
             if history_raw is None:
                 raise HistoryNotFound()
