@@ -2,6 +2,7 @@ version: '3.1'
 
 services:
   backend:
+    # TODO add healthcheck and autoheal
     restart: always
     environment:
       _UVICORN_HOST: "0.0.0.0"
@@ -19,8 +20,6 @@ services:
       - "./volumes/backend:/app/data"
     ports:
       - "8000:8000"
-    labels:
-      - "autoheal=true"
     deploy:
       resources:
         limits:
