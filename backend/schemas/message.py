@@ -39,3 +39,9 @@ class Messages(CamelizedBaseModel):
 
     def extract_chain_message(self) -> list[BaseMessage]:
         return [message.to_chain_message() for message in self.messages]
+
+    @classmethod
+    def from_chain_message(cls, messages: list[BaseMessage]) -> "Messages":
+        return cls(
+            messages=[Message.from_chain_message(message) for message in messages]
+        )

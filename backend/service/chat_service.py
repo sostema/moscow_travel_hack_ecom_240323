@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from repository.redis_repository import RedisRepository
-from schemas.message import Message, Messages, MessageType
+from schemas.message import BaseMessage, Message, Messages, MessageType
 from shared.base import logger
 from shared.ulid import ulid_as_uuid
 from supplier.gigachat_supplier import GigachatSupplier
@@ -34,6 +34,9 @@ class ChatService:
         history.messages = filtered_messages
         return history
 
+    def dump_history(self, history_id: str, history: Messages) -> None:
+        self.redis_repository.rset(self._get_path_messages(history_id), history.json())
+
     def get_all_histories(self) -> list[str]:
         histories = self.redis_repository.keys(self._get_path_messages("*"))
 
@@ -57,7 +60,6 @@ class ChatService:
         history = self.gigachat_supplier.message(message, history=history)
         logger.info("Chat history: {}, history_id: {}", history, history_id)
 
-        history_dumped = history.json()
-        self.redis_repository.rset(self._get_path_messages(history_id), history_dumped)
+        self.dump_history(history_id, history)
 
         return history.messages[-1], history_id
