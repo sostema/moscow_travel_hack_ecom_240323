@@ -1,0 +1,57 @@
+@use 'scss-reset/reset';
+
+@font-face {
+    font-family: Proto Grotesk;
+    src: url('./assets/fonts/ProtoGrotesk-Regular.ttf');
+    src:
+        url('./assets/fonts/ProtoGrotesk-Regular.ttf') format('truetype'),
+        url('./assets/fonts/ProtoGrotesk-Regular.otf') format('truetype');
+}
+
+:root {
+    font-family: Proto Grotesk;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    font-family: Proto Grotesk;
+    font-size: 44px;
+    font-weight: 400;
+    line-height: 46px;
+}
+
+h2 {
+    font-family: Proto Grotesk;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 36px;
+}
+
+h3 {
+    font-family: Proto Grotesk;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 28px;
+}
+
+h4 {
+    font-family: Proto Grotesk;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+span {
+    font-family: Proto Grotesk;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24px;
+}

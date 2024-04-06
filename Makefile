@@ -1,7 +1,11 @@
 PYTHON ?= .venv/bin/python
 
+frontend-install:
+	cd frontend && yarn
+	cd frontend && yarn build
+
 frontend-run:
-	cd backend && serve .
+	cd frontend && serve -s dist
 
 backend-install:
 	cd backend && python3.11 -m venv .venv
