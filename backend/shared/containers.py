@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from repository.pg_repository import PgRepository
 from repository.redis_repository import RedisRepository
 from service.chat_service import ChatService
+from service.event_service import EventService
 from service.heath_service import HeathService
 from supplier.gigachat_supplier import GigachatSupplier
 
@@ -12,6 +13,7 @@ class Container:
     heath_service: HeathService
     redis_repository: RedisRepository
     chat_service: ChatService
+    event_service: EventService
 
 
 def init_combat_container() -> Container:
@@ -26,8 +28,11 @@ def init_combat_container() -> Container:
         gigachat_supplier=gigachat_supplier, redis_repository=redis_repository
     )
 
+    event_service = EventService(pg_repository=pg_repository)
+
     return Container(
         heath_service=heath_service,
         redis_repository=redis_repository,
         chat_service=chat_service,
+        event_service=event_service,
     )

@@ -1,6 +1,6 @@
 from shared.ulid import ulid_as_uuid
-from sqlalchemy import BigInteger, Column, MetaData
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import DECIMAL, FLOAT, TEXT, BigInteger, Column, MetaData
+from sqlalchemy.dialects.postgresql import ARRAY, UUID
 from sqlalchemy.ext.declarative import declarative_base
 
 metadata_obj = MetaData(schema="public")
@@ -16,3 +16,19 @@ class Entity(Base):
     internal_id = Column(
         UUID(as_uuid=True), unique=True, default=ulid_as_uuid, nullable=False
     )
+
+
+class Event(Entity):
+    __tablename__ = "event"
+
+    type = Column(TEXT)
+    restaurant_type = Column(ARRAY(TEXT))
+    name = Column(TEXT)
+    description = Column(TEXT)
+    link = Column(TEXT)
+    img_link = Column(TEXT)
+    price = Column(DECIMAL)
+
+    address = Column(TEXT)
+    lat = Column(FLOAT)
+    lng = Column(FLOAT)

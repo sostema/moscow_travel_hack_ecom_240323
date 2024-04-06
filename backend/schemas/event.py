@@ -15,6 +15,7 @@ class EventType(StrEnum):
 class Event(CamelizedBaseModel):
     id_: uuid.UUID = Field(..., alias="id")
     type_: EventType = Field(..., alias="type")
+    restaurant_type: list[str] | None = None
     name: str | None = None
     description: str | None = None
     link: str | None = None
