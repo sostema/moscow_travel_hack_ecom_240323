@@ -19,6 +19,9 @@ class RedisRepository:
     def rget(self, k: str) -> bytes | None:
         return self.r.get(k)
 
+    def keys(self, k: str) -> list[bytes]:
+        return self.r.keys(k)
+
     async def health(self) -> None:
         if not await self.ar.ping():
             raise Exception("non true ping")
