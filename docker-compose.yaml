@@ -1,0 +1,120 @@
+version: '3.1'
+
+services:
+  backend:
+    restart: always
+    environment:
+      _UVICORN__HOST: "0.0.0.0"
+      _UVICORN__PORT: 8000
+      _UVICORN__SSL: "false"
+      _UVICORN__SSL_KEYFILE: "data/certs/privkey.pem"
+      _UVICORN__SSL_CERTFILE: "data/certs/fullchain.pem"
+      _REDIS__HOST: "redis"
+      _PG__HOST: "postgres"
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - "./backend/.env:/app/.env"
+      - "./volumes/backend:/app/data"
+    ports:
+      - "8000:8000"
+    labels:
+      - "autoheal=true"
+    healthcheck:
+      test: curl -f http://127.0.0.1:8000/health || exit 1
+      interval: 2m
+      timeout: 20s
+      retries: 3
+      start_period: 5s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 1800M
+
+  # frontend:
+  #   restart: always
+  #   environment: {}
+  #   build:
+  #     context: frontend
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #     postgres:
+  #       condition: service_healthy
+  #     backend:
+  #       condition: service_healthy
+  #   ports:
+  #     - "80:80"
+  #     - "433:433"
+  #   labels:
+  #     - "autoheal=true"
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.75'
+  #         memory: 1000M
+
+  redis:
+    image: redis:7.2.3-bookworm
+    restart: always
+    labels:
+      - "autoheal=true"
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - ./volumes/redis/:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 2m
+      timeout: 20s
+      retries: 3
+      start_period: 5s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 100M
+
+  postgres:
+    image: postgres:16.2-bookworm
+    environment:
+      POSTGRES_DB: db_main
+      POSTGRES_USER: db_main
+      POSTGRES_PASSWORD: db_main
+      PGUSER: db_main
+      PGPASSWORD: db_main
+      PGDATA: /var/lib/postgresql/data/pgdata
+    labels:
+      - "autoheal=true"
+    restart: unless-stopped
+    volumes:
+      - ./extra/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./volumes/pg/:/var/lib/postgresql/data/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1000M
+
+  autoheal:
+    restart: always
+    image: willfarrell/autoheal
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 100M
