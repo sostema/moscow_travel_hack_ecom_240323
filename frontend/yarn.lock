@@ -2688,6 +2688,11 @@ react-modal@^3.16.1:
     react-lifecycles-compat "^3.0.0"
     warning "^4.0.3"
 
+react-push-notification@^1.5.4:
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/react-push-notification/-/react-push-notification-1.5.4.tgz#98d708cbb48375856158fcd94403d35d994f3174"
+  integrity sha512-ZsiJfz8dNvfz0ClKcrzaKojIAdYou+s2N2M4Z6EuAlQlBsVqex/Wv0hldgueSLKihmGbZouj/oPih/gy5xlKIQ==
+
 react-refresh@^0.14.0:
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.14.0.tgz#4e02825378a5f227079554d4284889354e5f553e"

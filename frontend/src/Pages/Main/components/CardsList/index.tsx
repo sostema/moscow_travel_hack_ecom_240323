@@ -1,4 +1,4 @@
-import React, { useMemo, type FC } from 'react';
+import React, { useMemo, type FC, memo } from 'react';
 import { type EventCardType } from '../../../../models/frontend';
 import styles from './CardsList.module.scss';
 import Card, { type CardProps } from './Card';
@@ -35,4 +35,4 @@ const CardsList: FC<CardsListProps> = ({ events }) => {
 	);
 };
 
-export default CardsList;
+export default memo(CardsList);

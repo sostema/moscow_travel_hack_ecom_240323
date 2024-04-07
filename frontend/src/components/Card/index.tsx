@@ -7,9 +7,18 @@ import styles from './Card.module.scss';
 
 type CardProps = {
 	size?: 'L' | 'M' | 'S';
+	onClick?: () => void;
 } & EventCardType;
 
-const Card: FC<CardProps> = ({ size, imgLink, reviews, name, address, description }) => {
+const Card: FC<CardProps> = ({
+	size,
+	imgLink,
+	reviews,
+	name,
+	address,
+	description,
+	onClick,
+}) => {
 	const getCardSize = useMemo(() => {
 		switch (size) {
 			case 'L':
@@ -48,7 +57,9 @@ const Card: FC<CardProps> = ({ size, imgLink, reviews, name, address, descriptio
 						Данные собраны из открытых источников и проанализированы нейросетью GigaChat
 					</div>
 				</div>
-				<button className={styles.button}>Посмотреть</button>
+				<button className={styles.button} onClick={onClick}>
+					Посмотреть
+				</button>
 			</div>
 		</div>
 	);

@@ -6,7 +6,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import styles from './Input.module.scss';
 import Chat from '../Chat';
 import { type EventCardType } from '@models/frontend';
-import axios, { type AxiosResponse } from 'axios';
+import axios, { type AxiosPromise, type AxiosResponse } from 'axios';
 
 export interface ChatMessageType {
 	text: string;
@@ -24,32 +24,36 @@ const Input: FC = () => {
 	const [showSuggest, setShowSuggest] = useState<boolean>(false);
 	const [showChat, setShowChat] = useState<boolean>(false);
 	const [messages, setMessages] = useState<ChatMessageType[]>([]);
+	const [activeLink, setActiveLink] = useState<string>('/api/gigachat/search');
 
-	const handleSendMessage = (message: string): void => {
-		setMessages((prev) => [{ text: message }, ...prev]);
-		axios
-			.post<GigachatMessagesType, AxiosResponse<ChatMessageType>>(
-				'/api/gigachat/search',
-				{
+	const handleSendMessage = useCallback(
+		(message: string = '', link: string = activeLink): void => {
+			if (message) {
+				setMessages((prev) => [{ text: message }, ...prev]);
+			}
+			axios
+				.post<GigachatMessagesType, AxiosResponse<ChatMessageType>>(link, {
 					content: message,
-				},
-			)
-			.then((response) => {
-				setMessages((prev) => [response.data, ...prev]);
-			})
-			.catch((e) => {
-				console.log(e);
-			});
+				})
+				.then((response) => {
+					setMessages((prev) => [response.data, ...prev]);
+				})
+				.catch((e) => {
+					console.log(e);
+				});
+		},
+		[activeLink],
+	);
+
+	const handleNewChat = async (callback?: () => void): AxiosPromise => {
+		return await axios.delete('/api/gigachat/messages/history');
 	};
 
-	const handleNewChat = (callback?: () => void): void => {
-		axios
-			.delete('/api/gigachat/messages/history')
+	const handleNewChatClick = (): void => {
+		handleNewChat()
 			.then(() => {
+				setActiveLink('/api/gigachat/search');
 				setMessages([]);
-			})
-			.then(() => {
-				callback?.();
 			})
 			.catch((e) => {
 				console.log(e);
@@ -57,12 +61,46 @@ const Input: FC = () => {
 	};
 
 	const handleSuggestClick = useCallback((): void => {
-		handleNewChat(() => {
-			handleSendMessage(inputValue);
-			setShowChat(true);
-			setShowSuggest(false);
-		});
+		handleNewChat()
+			.then(() => {
+				setMessages([]);
+			})
+			.then(() => {
+				setActiveLink('/api/gigachat/search');
+			})
+			.then(() => {
+				handleSendMessage(inputValue);
+				setShowChat(true);
+				setShowSuggest(false);
+			})
+			.catch((e) => {
+				console.log(e);
+			});
 	}, [inputValue]);
+
+	const handleAkinatorClick = (): void => {
+		axios
+			.delete('/api/gigachat/messages/history')
+			.then(() => {
+				setMessages([]);
+				setActiveLink('/api/gigachat/akinator');
+				handleSendMessage('', '/api/gigachat/akinator');
+			})
+			.catch((e) => {
+				console.log(e);
+			});
+		// handleNewChat()
+		// 	.then(() => {
+		// 		setActiveLink('/api/gigachat/akinator');
+		// 	})
+		// 	.then(() => {
+		// 		console.log(activeLink);
+		// 		handleSendMessage();
+		// 	})
+		// 	.catch((e) => {
+		// 		console.log(e);
+		// 	});
+	};
 
 	useEffect(() => {
 		if (inputValue.length <= 0) {
@@ -115,7 +153,8 @@ const Input: FC = () => {
 				<Chat
 					messages={messages}
 					sendMessage={handleSendMessage}
-					newChat={handleNewChat}
+					newChat={handleNewChatClick}
+					akinatorClick={handleAkinatorClick}
 				/>
 			)}
 		</>

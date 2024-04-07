@@ -1,7 +1,6 @@
 import React, { useState, type FC, useEffect } from 'react';
 import Header from '../../static/Header';
 import Footer from '../../static/Footer';
-import Registration from '../../components/Registration';
 
 import Input from './components/Input';
 import CardsList from './components/CardsList';
@@ -11,8 +10,6 @@ import { parseDataTrack } from '../../parser';
 import { type EventCardType } from '@models/frontend';
 
 const Main: FC = () => {
-	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-	const [isRegistered, setIsRegistered] = useState<boolean>(false);
 	const [events, setEvents] = useState<EventCardType[]>([]);
 
 	useEffect(() => {
@@ -26,18 +23,6 @@ const Main: FC = () => {
 			});
 	}, []);
 
-	const handleModalOpen = (): void => {
-		setIsModalOpen(true);
-	};
-
-	const handleModalClose = (): void => {
-		setIsModalOpen(false);
-	};
-
-	const handleRegistrationClick = (): void => {
-		setIsRegistered(true);
-	};
-
 	return (
 		<>
 			<Header />
@@ -46,11 +31,6 @@ const Main: FC = () => {
 				<CardsList events={events} />
 			</main>
 			<Footer />
-			<Registration
-				isOpen={isModalOpen}
-				onClose={handleModalClose}
-				onClick={handleRegistrationClick}
-			/>
 		</>
 	);
 };

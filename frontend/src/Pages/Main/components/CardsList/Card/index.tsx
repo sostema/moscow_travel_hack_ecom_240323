@@ -74,21 +74,13 @@ const Card: FC<CardProps> = ({
 							</div>
 						)}
 						{restaurantType && restaurantType.length > 0 && (
-							<div key={i} className={styles.price}>
+							<div className={styles.price}>
 								<CuisineIcon className={styles.price__icon} />
 								<div className={styles.price__title}>
-									{restaurantType.map((type) => type)}
+									{restaurantType.map((type) => `${type} `)}
 								</div>
 							</div>
 						)}
-						{restaurantType &&
-							restaurantType?.length > 0 &&
-							restaurantType.map((type, i) => (
-								<div key={i} className={styles.price}>
-									<CuisineIcon className={styles.price__icon} />
-									<div className={styles.price__title}>{`Средний чек ${price}₽`}</div>
-								</div>
-							))}
 					</>
 				)}
 				{isGigachatCard && !isSmall && (

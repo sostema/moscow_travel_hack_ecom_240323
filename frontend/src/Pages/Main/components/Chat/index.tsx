@@ -12,9 +12,10 @@ interface ChatProps {
 	messages: ChatMessageType[];
 	sendMessage: (message: string) => void;
 	newChat: () => void;
+	akinatorClick: () => void;
 }
 
-const Chat: FC<ChatProps> = ({ messages, sendMessage, newChat }) => {
+const Chat: FC<ChatProps> = ({ messages, sendMessage, newChat, akinatorClick }) => {
 	const [value, setValue] = useState<string>('');
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -84,7 +85,9 @@ const Chat: FC<ChatProps> = ({ messages, sendMessage, newChat }) => {
 							Новый чат
 						</button>
 					)}
-					<button className={styles.customMessage}>Куда мне сходить еще?</button>
+					<button className={styles.customMessage} onClick={akinatorClick}>
+						Куда мне сходить еще?
+					</button>
 				</div>
 			</div>
 		</div>

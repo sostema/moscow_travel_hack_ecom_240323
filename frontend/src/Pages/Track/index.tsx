@@ -1,4 +1,4 @@
-import React, { type FC, useEffect, useState } from 'react';
+import React, { type FC, useEffect, useState, useCallback } from 'react';
 
 import HumanIcon from '../../media/human_walk.svg?react';
 
@@ -15,12 +15,16 @@ import EventsList from './components/EventsList';
 import Card from '../../components/Card';
 import Header from '../../static/Header';
 import Footer from '../../static/Footer';
+import Registration from '@components/Registration';
 
 const Track: FC = () => {
 	const [time, setTime] = useState<string>('');
 	const [distance, setDistance] = useState<string>('');
 	const [events, setEvents] = useState<EventCardType[]>([]);
 	const [activeEvent, setActiveEvent] = useState<EventCardType | undefined>(undefined);
+	const [name, setName] = useState<string>('');
+	const [isRegistered, setIsRegistered] = useState(false);
+	const [showModal, setShowModal] = useState(false);
 
 	const handleEventClick = (event: EventCardType): void => {
 		setActiveEvent(event);
@@ -51,6 +55,25 @@ const Track: FC = () => {
 			});
 	}, []);
 
+	const handleButtonClick = useCallback(() => {
+		if (!isRegistered) {
+			setShowModal(true);
+		} else if (activeEvent) {
+			window.open(activeEvent.link, '_blank');
+		}
+	}, [activeEvent, isRegistered]);
+
+	const handleClickRegister = (): void => {
+		setIsRegistered(true);
+		setShowModal(false);
+	};
+
+	useEffect(() => {
+		if (activeEvent) {
+			setName(activeEvent?.name);
+		}
+	}, [activeEvent]);
+
 	return (
 		<>
 			<Header />
@@ -60,10 +83,10 @@ const Track: FC = () => {
 						<div className="planHeader_contentWrapper__vrbiy">
 							<div className="planHeader_content__QHQTX">
 								<div className={styles.title}>
-									<Title text="Большая прогулка в Сокольниках" />
+									<Title text={name} />
 								</div>
 								<div className="" data-tour="onboarding-plan-header">
-									<Button />
+									<Button onClick={handleButtonClick} />
 								</div>
 							</div>
 						</div>
@@ -77,11 +100,18 @@ const Track: FC = () => {
 					</div>
 					<div className={styles.container}>
 						<EventsList onClick={handleEventClick} events={events} />
-						{activeEvent && <Card {...activeEvent} />}
+						{activeEvent && <Card onClick={handleButtonClick} {...activeEvent} />}
 					</div>
 				</div>
 			</main>
 			<Footer />
+			<Registration
+				onClick={handleClickRegister}
+				isOpen={showModal}
+				onClose={() => {
+					setShowModal(false);
+				}}
+			/>
 		</>
 	);
 };
