@@ -3,5 +3,19 @@
 	margin-top: 50px;
 	grid-template-columns: repeat(3, 392px);
 	grid-template-rows: repeat(2, 444px);
+	width: 100%;
+	max-width: 100%;
+	overflow: hidden;
 	gap: 24px;
+	justify-content: center;
+
+	@media screen and (max-width: 1224px) {
+		grid-template-columns: repeat(2, 392px);
+		justify-content: center;
+	}
+
+	@media screen and (max-width: 820px) {
+		grid-template-columns: repeat(1, 392px);
+		justify-content: center;
+	}
 }
