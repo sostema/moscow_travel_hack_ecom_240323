@@ -1,0 +1,109 @@
+.root {
+	border-radius: 20px;
+	background-color: #f5f5f5;
+	height: fit-content;
+}
+
+.photo {
+	width: 100%;
+	height: 260px;
+	border-radius: 20px 20px 0 0;
+	background-position: center;
+	background-size: cover;
+}
+
+.info {
+	margin-top: 30px;
+	display: flex;
+	flex-direction: column;
+	padding: 0 22px 24px;
+}
+
+.title {
+	font-size: 28px;
+	font-weight: 400;
+	line-height: 30px;
+	text-align: left;
+}
+
+.address {
+	margin-top: 10px;
+	font-family: SuisseIntl Regular;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 18px;
+	text-align: left;
+}
+
+.description {
+	margin-top: 12px;
+	font-family: SuisseIntl Regular;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 18px;
+	text-align: left;
+}
+
+.reviews__title {
+	margin-top: 20px;
+	font-size: 24px;
+	font-weight: 400;
+	line-height: 24px;
+	text-align: left;
+}
+
+.reviews__container {
+	margin-top: 14px;
+	display: flex;
+	white-space: wrap;
+	gap: 10px;
+}
+
+.review {
+	padding: 6px 10px;
+	border-radius: 20px;
+	gap: 10px;
+	border-radius: 20px 0px 0px 0px;
+	opacity: 0px;
+	font-family: SuisseIntl Regular;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 20px;
+}
+
+.message {
+	margin-top: 20px;
+	display: flex;
+	align-items: center;
+}
+
+.message__icon {
+	width: 20px;
+	height: 20px;
+	margin-right: 8px;
+}
+
+.message__text {
+	font-family: SuisseIntl Regular;
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 12px;
+	color: #a6a6a6;
+}
+
+.button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	margin-top: 26px;
+	padding-block: 15px;
+	border-radius: 15px;
+	background-color: #ffcf08;
+	font-family: SuisseIntl Regular;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 30px;
+	text-align: center;
+	color: #1d1d1d;
+}

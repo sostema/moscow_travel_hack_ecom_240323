@@ -1,0 +1,33 @@
+.root {
+	display: flex;
+	gap: 45px;
+	align-items: center;
+}
+
+.info {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+}
+
+.time {
+	font-family: SuisseIntl Regular;
+	font-size: 22px;
+	font-weight: 500;
+	line-height: 26px;
+}
+
+.dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 10px;
+	background-color: #d9d9d9;
+}
+
+.distance {
+	font-family: SuisseIntl Regular;
+	font-size: 22px;
+	font-weight: 500;
+	line-height: 26px;
+	text-align: left;
+}
