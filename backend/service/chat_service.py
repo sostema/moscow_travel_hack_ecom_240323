@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from ml import classify_event_type
+from ml.retrieval_manager import RetrievalManager
 from repository.redis_repository import RedisRepository
 from schemas.message import BaseMessage, Message, Messages, MessageType
 from shared.base import logger
@@ -15,8 +17,17 @@ class HistoryNotFound(Exception):
 class ChatService:
     gigachat_supplier: GigachatSupplier
     redis_repository: RedisRepository
+    retrieval_manager: RetrievalManager
 
-    # def search(self)
+    def search(self, query: str) -> Message:
+        message = classify_event_type.generate_messages_for_chat(query)
+        resp = self.gigachat_supplier.chat(message)
+        event_type = classify_event_type.parse_response_for_types(resp.content)
+
+        doc = self.retrieval_manager.retrieve_most_relevant_document(event_type, query)
+        print(doc.metadata["id"])
+
+        return Message(text="AAAA", type_=MessageType.HUMAN)
 
     def _get_path_messages(self, history_id: str) -> str:
         return f"chat::{history_id}"
