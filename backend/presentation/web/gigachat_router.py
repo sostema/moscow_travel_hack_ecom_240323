@@ -84,12 +84,15 @@ def get_all_histories() -> list[str]:
 def search(
     response: Response,
     prompt: UserMessage = UserMessage(content="Что покушать?"),
+    search_history_id: str | None = Cookie(None),
 ) -> Message:
     """
     Возвращает айди всех историй. Только для отладки
     """
+    if search_history_id is not None:
+        return container.chat_service.search_continue(prompt.content, search_history_id)
 
     message, history_id = container.chat_service.search(prompt.content)
-    response.set_cookie(key="history_id", value=history_id)
+    response.set_cookie(key="search_history_id", value=history_id)
 
     return message
