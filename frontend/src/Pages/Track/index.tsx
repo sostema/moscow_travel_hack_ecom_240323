@@ -76,7 +76,7 @@ const Track: FC = () => {
 
 	return (
 		<>
-			<Header />
+			<Header authClick={handleButtonClick} />
 			<main className="layoutNota_background__IzYDA layoutNota_content__MlFYT">
 				<div className="planDetails_container__Kdl9G">
 					<div className="planDetails_contentWrap__xh8J_">
