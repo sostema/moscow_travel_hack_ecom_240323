@@ -1,7 +1,8 @@
 import random
 from dataclasses import dataclass
 
-from langchain.schema import AIMessage, HumanMessage
+from langchain.prompts import load_prompt
+from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from ml import classify_event_type, search_results_handler
 from ml.retrieval_manager import RetrievalManager
 from repository.pg_repository import PgRepository
@@ -10,6 +11,9 @@ from schemas.message import BaseMessage, Message, Messages, MessageType
 from shared.base import logger
 from shared.ulid import ulid_as_uuid
 from supplier.gigachat_supplier import GigachatSupplier
+
+akinator_system_template = load_prompt("ml/prompts/akinator_system.yaml")
+akinator_final_template = load_prompt("ml/prompts/akinator_continue_system.yaml")
 
 
 class HistoryNotFound(Exception):
@@ -125,3 +129,34 @@ class ChatService:
         self.dump_history(history_id, history)
 
         return history.messages[-1], history_id
+
+    def akinator_final_state(self, domain_messages: Messages) -> tuple[Message, str]:
+        system_prompt = akinator_final_template.format(
+            history_messages=domain_messages.export_history_to_prompt()
+        )
+        messages = [SystemMessage(content=system_prompt)]
+        resp = self.gigachat_supplier.chat.invoke(messages)
+        return self.search(resp.content)
+
+    def akinator(self, history_id: str | None = None) -> tuple[Message, str]:
+        if history_id is not None:
+            domain_messages = self.load_history(history_id)
+            if len(domain_messages.messages) >= 7:
+                return self.akinator_final_state(domain_messages)
+
+        else:
+            history_id = str(ulid_as_uuid())
+            system_prompt = akinator_system_template.format()
+
+            domain_messages = Messages.from_chain_message(
+                [SystemMessage(content=system_prompt)]
+            )
+
+        resp = self.gigachat_supplier.chat.invoke(
+            domain_messages.extract_chain_message()
+        )
+        domain_messages.messages.append(Message.from_chain_message(resp))
+
+        self.dump_history(history_id, domain_messages)
+
+        return domain_messages[-1], history_id

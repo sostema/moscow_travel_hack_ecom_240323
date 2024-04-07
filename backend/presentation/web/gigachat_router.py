@@ -103,10 +103,7 @@ def reset_history(response: Response, history_id: str | None = Cookie(None)) -> 
     Удаляет текущий контекст
     """
     if history_id is None:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="history id required",
-        )
+        return None
 
     response.delete_cookie(key="history_id")
 
