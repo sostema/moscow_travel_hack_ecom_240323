@@ -6,7 +6,7 @@ authors = ["pibragimov <pibragimov@whoosh.bike>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11,<3.13"
+python = "^3.10,<3.13"
 sqlalchemy = "^2.0.28"
 psycopg2-binary = "^2.9.3"
 ujson = "^5.9.0"
