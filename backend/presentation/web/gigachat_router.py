@@ -47,7 +47,8 @@ def send_message(
     history_id: str | None = Depends(get_history_id_with_stop),
 ) -> Message:
     """
-    Отправляет промпт в гигачат. Возвращает X-History-Id, который можно использовать для консистентности истории.
+    Отправляет промпт в гигачат. В кукизах сохраняется ID истории.
+    Отправка слова "стоп" вначале промпта удалит историю
     """
 
     try:
@@ -123,6 +124,7 @@ def search(
 ) -> Message:
     """
     Поиск места или события
+    Отправка слова "стоп" вначале промпта удалит историю
     """
     if history_id is not None:
         return container.chat_service.search_continue(prompt.content, history_id)
