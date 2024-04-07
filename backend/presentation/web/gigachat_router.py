@@ -81,11 +81,15 @@ def get_all_histories() -> list[str]:
 
 
 @router.post("/search")
-def get_all_histories(
+def search(
+    response: Response,
     prompt: UserMessage = UserMessage(content="Что покушать?"),
 ) -> Message:
     """
     Возвращает айди всех историй. Только для отладки
     """
 
-    return container.chat_service.search(prompt.content)
+    message, history_id = container.chat_service.search(prompt.content)
+    response.set_cookie(key="history_id", value=history_id)
+
+    return message

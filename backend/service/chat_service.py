@@ -1,6 +1,7 @@
 import random
 from dataclasses import dataclass
 
+from langchain.schema import AIMessage, HumanMessage
 from ml import classify_event_type, search_results_handler
 from ml.retrieval_manager import RetrievalManager
 from repository.pg_repository import PgRepository
@@ -29,7 +30,23 @@ class ChatService:
             "Смотрите, что я нашла",
         ]
 
-    def search(self, query: str) -> Message:
+    def search_continue(self, query: str, history_id: str) -> Message:
+        history = self.load_history(history_id)
+
+        messages = search_results_handler.generate_messages_for_continous_chat(
+            history.messages[0].event,
+        )
+        messages.append(HumanMessage(content=query))
+        resp = self.gigachat_supplier.chat(messages)
+        messages.append(resp)
+
+        domain_messages = Messages.from_chain_message(messages=messages)
+        domain_messages.messages[0].event = history.messages[0].event
+        self.dump_history(history_id, domain_messages)
+
+        return domain_messages.messages[-1]
+
+    def search(self, query: str) -> tuple[Message, str]:
         message = classify_event_type.generate_messages_for_chat(query)
         resp = self.gigachat_supplier.chat(message)
         event_type = classify_event_type.parse_response_for_types(resp.content)
@@ -43,22 +60,23 @@ class ChatService:
         )
         resp = self.gigachat_supplier.chat(message)
 
-        return Message(
+        domain_message = Message(
             text=random.choice(self.string_header_what_do_you_think),
             description=resp.content,
             type_=MessageType.HUMAN,
             event=event,
         )
+        history_id = str(ulid_as_uuid())
+        self.dump_history(history_id, Messages(messages=[domain_message]))
+
+        return domain_message, history_id
 
     def _get_path_messages(self, history_id: str) -> str:
         return f"chat::{history_id}"
 
     def get_history(self, history_id: str) -> Messages:
-        history_raw = self.redis_repository.rget(self._get_path_messages(history_id))
-        if history_raw is None:
-            raise HistoryNotFound()
+        history = self.load_history(history_id)
 
-        history = Messages.parse_raw(history_raw.decode())
         filtered_messages = []
         for message in history.messages:
             if message.type_ == MessageType.SYSTEM:
@@ -76,6 +94,12 @@ class ChatService:
 
         return [history_id.decode().split("::")[1] for history_id in histories]
 
+    def load_history(self, history_id: str) -> Messages:
+        history_raw = self.redis_repository.rget(self._get_path_messages(history_id))
+        if history_raw is None:
+            raise HistoryNotFound()
+        return Messages.parse_raw(history_raw.decode())
+
     def send_message(self, message: str, history_id: str | None) -> tuple[Message, str]:
         logger.debug("Sending message in history_id: {}", history_id)
 
@@ -84,12 +108,7 @@ class ChatService:
             history = None
         else:
             # TODO posible racecond, rewrite using pessimistic lock
-            history_raw = self.redis_repository.rget(
-                self._get_path_messages(history_id)
-            )
-            if history_raw is None:
-                raise HistoryNotFound()
-            history = Messages.parse_raw(history_raw.decode())
+            history = self.load_history(history_id)
 
         history = self.gigachat_supplier.message(message, history=history)
         logger.info("Chat history: {}, history_id: {}", history, history_id)
