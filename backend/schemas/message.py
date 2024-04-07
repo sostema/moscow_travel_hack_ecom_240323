@@ -13,6 +13,11 @@ class MessageType(StrEnum):
     SYSTEM = "system"
     HUMAN = "human"
 
+    def to_ru(self) -> str:
+        if self == MessageType.AI:
+            return "ассистент"
+        return "человек"
+
 
 class Message(CamelizedBaseModel):
     text: str
@@ -40,6 +45,11 @@ class Messages(CamelizedBaseModel):
 
     def extract_chain_message(self) -> list[BaseMessage]:
         return [message.to_chain_message() for message in self.messages]
+
+    def export_history_to_prompt(self) -> str:
+        return "\n".join(
+            [f"{message.type_.to_ru()}: {message.text}" for message in self.messages]
+        )
 
     @classmethod
     def from_chain_message(cls, messages: list[BaseMessage]) -> "Messages":

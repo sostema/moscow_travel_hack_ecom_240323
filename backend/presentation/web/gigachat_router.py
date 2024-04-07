@@ -50,7 +50,7 @@ def send_message(
 ) -> Message:
     """
     Отправляет промпт в гигачат. В кукизах сохраняется ID истории.
-    Отправка слова "стоп" вначале промпта удалит историю
+    Отправка слова "стоп" вначале промпта удалит историю. Также удалить историю можно через DELETE /messages/history
     """
 
     try:
@@ -100,7 +100,7 @@ def get_history(
 )
 def reset_history(response: Response, history_id: str | None = Cookie(None)) -> None:
     """
-    Возвращает историю сообщений по ID
+    Удаляет текущий контекст
     """
     if history_id is None:
         raise HTTPException(
@@ -134,7 +134,28 @@ def search(
 ) -> Message:
     """
     Поиск места или события
-    Отправка слова "стоп" вначале промпта удалит историю
+    Отправка слова "стоп" вначале промпта удалит историю. Также удалить историю можно через DELETE /messages/history
+    """
+    if history_id is not None:
+        return container.chat_service.search_continue(prompt.content, history_id)
+
+    message, history_id = container.chat_service.search(prompt.content)
+    response.set_cookie(key="history_id", value=history_id)
+
+    return message.jsonable_encoder(by_alias=True)
+
+
+@router.post(
+    "/akinator", response_model_exclude_none=True, response_model_by_alias=True
+)
+def akinator(
+    response: Response,
+    prompt: UserMessage = UserMessage(content="Что покушать?"),
+    history_id: str | None = Depends(get_history_id_with_stop),
+) -> Message:
+    """
+    Поиск места или события в формате акинатора
+    Отправка слова "стоп" вначале промпта удалит историю. Также удалить историю можно через DELETE /messages/history
     """
     if history_id is not None:
         return container.chat_service.search_continue(prompt.content, history_id)
