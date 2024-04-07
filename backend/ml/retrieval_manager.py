@@ -22,12 +22,15 @@ class RetrievalManager:
 
     def retrieve_most_relevant_document(
         self, event_type: EventType, query: str
-    ) -> Document:
+    ) -> Document | None:
         relevant_documents = self.pg_repository.event_type_to_store[
             event_type
         ].get_relevant_documents(query)
-        most_relevant = relevant_documents[0]
-        return most_relevant
+
+        if len(relevant_documents) == 0:
+            return None
+
+        return relevant_documents[0]
 
     def retrieve_relevant_documents(
         self, event_type: EventType, query: str

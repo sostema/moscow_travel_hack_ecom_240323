@@ -43,12 +43,18 @@ class PgRepository:
                 collection_name="vector_collection_event",
                 connection_string=con_string,
                 embedding_function=self.embedding_model,
-            ).as_retriever(search_type="mmr"),
+            ).as_retriever(
+                search_type="similarity_score_threshold",
+                search_kwargs={"score_threshold": 0.2, "k": 1},
+            ),
             EventType.RESTAURANT: PGVector(
                 collection_name="vector_collection_restaurant",
                 connection_string=con_string,
                 embedding_function=self.embedding_model,
-            ).as_retriever(search_type="mmr"),
+            ).as_retriever(
+                search_type="similarity_score_threshold",
+                search_kwargs={"score_threshold": 0.2, "k": 1},
+            ),
         }
         self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=512)
 
@@ -58,18 +64,6 @@ class PgRepository:
             one = result.fetchone()
             if one is not None and one[0] != 1:
                 raise Exception('Should be 1 from "select 1"')
-
-    def create_embeddings_from_strings(
-        self, documents: list[str], document_ids: list[int]
-    ) -> None:
-        splitted_documents = self.text_splitter.create_documents(
-            documents,
-            metadatas=[{"document_id": document_id} for document_id in document_ids],
-        )
-        self.retriever.add_documents(splitted_documents)
-
-    def retrieve_relevant_documents(self, query: str) -> list[Document]:
-        return self.retriever.get_relevant_documents(query)
 
     def compile_table(self, table) -> str:  # noqa: ANN001
         return str(CreateTable(table.__table__).compile(dialect=postgresql.dialect()))

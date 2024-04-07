@@ -19,7 +19,7 @@ def generate_messages_for_chat(text: str) -> list[BaseMessage]:
     return messages
 
 
-def parse_response_for_types(message: str) -> str:
+def parse_response_for_types(message: str) -> EventType:
     categories = ["Ресторан"]
     for cat in categories:
         if cat.lower() in message.lower():

@@ -123,6 +123,14 @@ def get_all_histories() -> list[str]:
     return container.chat_service.get_all_histories()
 
 
+def set_or_delete_history_id(response: Response, history_id: str | None) -> None:
+    if history_id is None:
+        response.delete_cookie(key="history_id")
+        return
+
+    response.set_cookie(key="history_id", value=history_id)
+
+
 @router.post("/search", response_model_exclude_none=True, response_model_by_alias=True)
 def search(
     response: Response,
@@ -137,7 +145,7 @@ def search(
         return container.chat_service.search_continue(prompt.content, history_id)
 
     message, history_id = container.chat_service.search(prompt.content)
-    response.set_cookie(key="history_id", value=history_id)
+    set_or_delete_history_id(response, history_id)
 
     return message
 
@@ -157,6 +165,6 @@ def akinator(
     message, history_id = container.chat_service.akinator(
         prompt.content if prompt is not None else None, history_id
     )
-    response.set_cookie(key="history_id", value=history_id)
+    set_or_delete_history_id(response, history_id)
 
     return message

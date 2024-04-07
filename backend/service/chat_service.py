@@ -63,12 +63,21 @@ class ChatService:
 
         return domain_messages.messages[-1]
 
-    def search(self, query: str) -> tuple[Message, str]:
+    def search(self, query: str) -> tuple[Message, str | None]:
         message = classify_event_type.generate_messages_for_chat(query)
         resp = self.gigachat_supplier.chat.invoke(message)
         event_type = classify_event_type.parse_response_for_types(resp.content)
 
         doc = self.retrieval_manager.retrieve_most_relevant_document(event_type, query)
+
+        if doc is None:
+            return (
+                Message(
+                    text="Упс, я ничего не нашла:( Попробуйте сформулировать запрос проще",
+                    type=MessageType.AI,
+                ),
+                None,
+            )
 
         event = self.pg_repository.get_event(id_=doc.metadata["id"])
 
@@ -147,28 +156,33 @@ class ChatService:
 
         return history.messages[-1], history_id
 
-    def akinator_final_state(self, domain_messages: Messages) -> tuple[Message, str]:
+    def akinator_final_state(
+        self, domain_messages: Messages
+    ) -> tuple[Message, str | None]:
         system_prompt = akinator_final_template.format(
             history_messages=domain_messages.export_history_to_prompt()
         )
         messages = [SystemMessage(content=system_prompt)]
         resp = self.gigachat_supplier.chat.invoke(messages)
+
         return self.search(resp.content)
 
     def akinator(
         self, query: str | None = None, history_id: str | None = None
-    ) -> tuple[Message, str]:
+    ) -> tuple[Message, str | None]:
         if history_id is not None:
             domain_messages = self.load_history(history_id)
             if domain_messages.type_ == HistoryType.SEARCH:
                 return self.search_continue(query, history_id), history_id
 
             if len(domain_messages.messages) >= 5:
-                return self.akinator_final_state(domain_messages)
-            else:
-                domain_messages.messages.append(
-                    Message.from_chain_message(HumanMessage(content=query))
-                )
+                msg, history_id = self.akinator_final_state(domain_messages)
+                if history_id is not None:
+                    return msg, history_id
+
+            domain_messages.messages.append(
+                Message.from_chain_message(HumanMessage(content=query))
+            )
         else:
             history_id = str(ulid_as_uuid())
             system_prompt = akinator_system_template.format()
