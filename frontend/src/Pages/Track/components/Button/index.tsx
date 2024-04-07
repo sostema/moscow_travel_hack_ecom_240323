@@ -1,9 +1,18 @@
-import React from "react";
+import React, { type FC } from 'react';
 
-import styles from "./Button.module.scss";
+import styles from './Button.module.scss';
 
-const Button = () => {
-  return <button className={styles.root}>Спланировать</button>;
+interface ButtonProps {
+	text?: string;
+	onClick?: () => void;
+}
+
+const Button: FC<ButtonProps> = ({ text = 'Спланировать', onClick }) => {
+	return (
+		<button onClick={onClick} className={styles.root}>
+			{text}
+		</button>
+	);
 };
 
 export default Button;

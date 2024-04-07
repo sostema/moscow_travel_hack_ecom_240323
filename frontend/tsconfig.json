@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"baseUrl": ".",
 		"lib": ["es2020", "dom"],
 		"inlineSourceMap": false,
 		"sourceMap": false,
@@ -11,11 +12,11 @@
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"paths": {
-			"@media": ["./src/media"],
-			"@pages": ["./src/pages"],
-			"@models": ["./src/models"],
-			"@static": ["./src/static"],
-			"@components": ["./src/components"]
+			"@media/*": ["./src/media/*"],
+			"@pages/*": ["./src/pages/*"],
+			"@models/*": ["./src/models/*"],
+			"@static/*": ["./src/static/*"],
+			"@components/*": ["./src/components/*"]
 		}
 	},
 	"include": ["src"],

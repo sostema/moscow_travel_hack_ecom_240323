@@ -4,11 +4,12 @@ import ReactDOM from 'react-dom/client';
 import './index.scss';
 import Track from './Pages/Track';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Main from './Pages/Main';
 
 const router = createBrowserRouter([
 	{
 		path: '/',
-		element: <div>HomePage</div>,
+		element: <Main />,
 	},
 	{
 		path: '/track/',

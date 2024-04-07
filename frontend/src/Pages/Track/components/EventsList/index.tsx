@@ -3,14 +3,14 @@ import { type EventCardType } from '../../../../models/frontend';
 import Walk from './Walk';
 import Event from './Event';
 
-import styles from './Events.module.scss';
+import styles from './EventsList.module.scss';
 
-interface EventsProps {
+interface EventsListProps {
 	events: EventCardType[];
 	onClick: (event: EventCardType) => void;
 }
 
-const Events: FC<EventsProps> = ({ events, onClick }) => {
+const EventsList: FC<EventsListProps> = ({ events, onClick }) => {
 	let queue = 0;
 
 	return (
@@ -31,4 +31,4 @@ const Events: FC<EventsProps> = ({ events, onClick }) => {
 	);
 };
 
-export default Events;
+export default EventsList;

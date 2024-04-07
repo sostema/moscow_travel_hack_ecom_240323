@@ -11,7 +11,7 @@ import { type RoutesDataType } from '../../models/backend';
 import { intervalToDuration } from 'date-fns';
 import { parseDataTrack } from '../../parser';
 import { type EventCardType } from '../../models/frontend';
-import Events from './components/Events';
+import EventsList from './components/EventsList';
 import Card from '../../components/Card';
 import Header from '../../static/Header';
 import Footer from '../../static/Footer';
@@ -76,7 +76,7 @@ const Track: FC = () => {
 						</div>
 					</div>
 					<div className={styles.container}>
-						<Events onClick={handleEventClick} events={events} />
+						<EventsList onClick={handleEventClick} events={events} />
 						{activeEvent && <Card {...activeEvent} />}
 					</div>
 				</div>
