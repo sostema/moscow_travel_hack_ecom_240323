@@ -89,17 +89,6 @@ const Input: FC = () => {
 			.catch((e) => {
 				console.log(e);
 			});
-		// handleNewChat()
-		// 	.then(() => {
-		// 		setActiveLink('/api/gigachat/akinator');
-		// 	})
-		// 	.then(() => {
-		// 		console.log(activeLink);
-		// 		handleSendMessage();
-		// 	})
-		// 	.catch((e) => {
-		// 		console.log(e);
-		// 	});
 	};
 
 	useEffect(() => {
