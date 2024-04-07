@@ -37,7 +37,7 @@ class ChatService:
             history.messages[0].event,
         )
         messages.append(HumanMessage(content=query))
-        resp = self.gigachat_supplier.chat(messages)
+        resp = self.gigachat_supplier.chat.invoke(messages)
         messages.append(resp)
 
         domain_messages = Messages.from_chain_message(messages=messages)
@@ -48,7 +48,7 @@ class ChatService:
 
     def search(self, query: str) -> tuple[Message, str]:
         message = classify_event_type.generate_messages_for_chat(query)
-        resp = self.gigachat_supplier.chat(message)
+        resp = self.gigachat_supplier.chat.invoke(message)
         event_type = classify_event_type.parse_response_for_types(resp.content)
 
         doc = self.retrieval_manager.retrieve_most_relevant_document(event_type, query)
@@ -58,7 +58,7 @@ class ChatService:
         message = search_results_handler.generate_messages_for_chat(
             user_input=query, event=event
         )
-        resp = self.gigachat_supplier.chat(message)
+        resp = self.gigachat_supplier.chat.invoke(message)
 
         domain_message = Message(
             text=random.choice(self.string_header_what_do_you_think),
@@ -74,8 +74,10 @@ class ChatService:
     def _get_path_messages(self, history_id: str) -> str:
         return f"chat::{history_id}"
 
-    def get_history(self, history_id: str) -> Messages:
+    def get_history(self, history_id: str, remove_system: bool) -> Messages:
         history = self.load_history(history_id)
+        if not remove_system:
+            return history
 
         filtered_messages = []
         for message in history.messages:

@@ -28,10 +28,10 @@ class GigachatSupplier:
         history.messages.append(
             Message.from_chain_message(HumanMessage(content=prompt))
         )
-        res = self.chat(history.extract_chain_message())
+        res = self.chat.invoke(history.extract_chain_message())
         history.messages.append(Message.from_chain_message(res))
 
         return history
 
     def send_message(self, messages: BaseMessage) -> BaseMessage:
-        return self.chat(messages)
+        return self.chat.invoke(messages)

@@ -4,6 +4,7 @@ from fastapi import (
     Depends,
     Header,
     HTTPException,
+    Query,
     Request,
     Response,
     status,
@@ -64,7 +65,10 @@ def send_message(
 
 
 @router.get("/messages/history", response_model_exclude_none=True)
-def get_history(history_id: str | None = Cookie(None)) -> Messages:
+def get_history(
+    history_id: str | None = Cookie(None),
+    remove_system: bool = Query(True, alias="removeSystem"),
+) -> Messages:
     """
     Возвращает историю сообщений по ID
     """
@@ -75,7 +79,9 @@ def get_history(history_id: str | None = Cookie(None)) -> Messages:
         )
 
     try:
-        history = container.chat_service.get_history(history_id=history_id)
+        history = container.chat_service.get_history(
+            history_id=history_id, remove_system=remove_system
+        )
     except HistoryNotFound:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="history not found"

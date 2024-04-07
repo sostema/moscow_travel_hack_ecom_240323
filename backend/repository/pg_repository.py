@@ -2,7 +2,9 @@ import uuid
 from dataclasses import dataclass
 
 from langchain.docstore.document import Document
-from langchain.embeddings import SentenceTransformerEmbeddings
+from langchain_community.embeddings.sentence_transformer import (
+    SentenceTransformerEmbeddings,
+)
 from langchain_community.vectorstores.pgvector import PGVector
 from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_text_splitters import RecursiveCharacterTextSplitter

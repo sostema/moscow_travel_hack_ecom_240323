@@ -1,5 +1,7 @@
 from langchain.docstore.document import Document
-from langchain.embeddings import SentenceTransformerEmbeddings
+from langchain_community.embeddings.sentence_transformer import (
+    SentenceTransformerEmbeddings,
+)
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from repository.pg_repository import PgRepository
 from schemas.event import EventType
