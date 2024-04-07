@@ -4,6 +4,7 @@ from enum import StrEnum
 
 from pydantic import Field
 from schemas.base import CamelizedBaseModel
+from shared.ulid import ulid_as_uuid
 
 
 class EventType(StrEnum):
@@ -13,7 +14,7 @@ class EventType(StrEnum):
 
 
 class Event(CamelizedBaseModel):
-    id_: uuid.UUID = Field(..., alias="id")
+    id_: uuid.UUID = Field(default_factory=ulid_as_uuid, alias="id")
     type_: EventType = Field(..., alias="type")
     restaurant_type: list[str] | None = None
     name: str

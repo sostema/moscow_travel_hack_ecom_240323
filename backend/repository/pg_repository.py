@@ -11,7 +11,7 @@ from schemas.event import Event, Events, EventType
 from shared.base import logger
 from shared.settings import app_settings
 from shared.ulid import ulid_as_uuid
-from sqlalchemy import create_engine, desc, insert, select, text
+from sqlalchemy import create_engine, delete, desc, insert, select, text
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.schema import CreateTable
@@ -70,6 +70,12 @@ class PgRepository:
 
     def compile_table(self, table) -> str:  # noqa: ANN001
         return str(CreateTable(table.__table__).compile(dialect=postgresql.dialect()))
+
+    def delete_events(self) -> None:
+        logger.info("DELETING EVENTS!")
+        with self._engine.connect() as session:
+            session.execute(delete(EventDB))
+            session.commit()
 
     def insert_events(self, events: Events) -> None:
         with self._engine.connect() as session:

@@ -25,7 +25,7 @@ class ChatService:
         event_type = classify_event_type.parse_response_for_types(resp.content)
 
         doc = self.retrieval_manager.retrieve_most_relevant_document(event_type, query)
-        print(doc.metadata["id"])
+        print(doc.metadata)
 
         return Message(text="AAAA", type_=MessageType.HUMAN)
 
