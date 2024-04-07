@@ -20,3 +20,9 @@ CREATE TABLE public.event (
         PRIMARY KEY (id),
         UNIQUE (internal_id)
 )
+
+-- run after start of server
+-- ALTER TABLE langchain_pg_embedding
+--   ALTER COLUMN cmetadata
+--   SET DATA TYPE jsonb
+--   USING cmetadata::jsonb;

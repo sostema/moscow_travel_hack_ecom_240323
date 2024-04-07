@@ -32,6 +32,11 @@ class ChatService:
 
     def search_continue(self, query: str, history_id: str) -> Message:
         history = self.load_history(history_id)
+        if history.messages[0].event is None:
+            return Message(
+                text='Упс, что-то пошло не так:(\nПопробуй отправить слово "стоп" и спросить меня снова',
+                type_=MessageType.AI,
+            )
 
         messages = search_results_handler.generate_messages_for_continous_chat(
             history.messages[0].event,
@@ -103,8 +108,6 @@ class ChatService:
         return Messages.parse_raw(history_raw.decode())
 
     def send_message(self, message: str, history_id: str | None) -> tuple[Message, str]:
-        logger.debug("Sending message in history_id: {}", history_id)
-
         if history_id is None:
             history_id = str(ulid_as_uuid())
             history = None
