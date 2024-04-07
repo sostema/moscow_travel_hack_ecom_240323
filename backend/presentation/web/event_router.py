@@ -5,12 +5,22 @@ from schemas.event import Event, Events, EventType, Route, example_events
 router = APIRouter(prefix="/events")
 
 
-@router.get("", response_model_exclude_none=True, response_model=Events)
+@router.get(
+    "",
+    response_model_exclude_none=True,
+    response_model_by_alias=True,
+    response_model=Events,
+)
 async def get_events() -> Events:
     return container.event_service.get_events()
 
 
-@router.get("/routes", response_model_exclude_none=True, response_model=Route)
+@router.get(
+    "/routes",
+    response_model_exclude_none=True,
+    response_model_by_alias=True,
+    response_model=Route,
+)
 async def get_routes() -> Route:
     events = container.event_service.get_events().events
     return Route(

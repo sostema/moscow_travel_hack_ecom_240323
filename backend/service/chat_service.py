@@ -35,7 +35,7 @@ class ChatService:
         if history.messages[0].event is None:
             return Message(
                 text='Упс, что-то пошло не так:(\nПопробуй отправить слово "стоп" и спросить меня снова',
-                type_=MessageType.AI,
+                type=MessageType.AI,
             )
 
         messages = search_results_handler.generate_messages_for_continous_chat(
@@ -68,7 +68,7 @@ class ChatService:
         domain_message = Message(
             text=random.choice(self.string_header_what_do_you_think),
             description=resp.content,
-            type_=MessageType.AI,
+            type=MessageType.AI,
             event=event,
         )
         history_id = str(ulid_as_uuid())
@@ -95,6 +95,7 @@ class ChatService:
 
     def dump_history(self, history_id: str, history: Messages) -> None:
         self.redis_repository.rset(self._get_path_messages(history_id), history.json())
+        logger.info("history dumped: {}", history.jsonable_encoder())
 
     def get_all_histories(self) -> list[str]:
         histories = self.redis_repository.keys(self._get_path_messages("*"))
@@ -105,7 +106,10 @@ class ChatService:
         history_raw = self.redis_repository.rget(self._get_path_messages(history_id))
         if history_raw is None:
             raise HistoryNotFound()
-        return Messages.parse_raw(history_raw.decode())
+        history = Messages.parse_raw(history_raw.decode())
+
+        logger.info("history loaded: {}", history.jsonable_encoder())
+        return history
 
     def send_message(self, message: str, history_id: str | None) -> tuple[Message, str]:
         if history_id is None:
