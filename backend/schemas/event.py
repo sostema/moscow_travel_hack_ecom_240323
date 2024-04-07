@@ -64,7 +64,7 @@ example_events = [
 class Events(CamelizedBaseModel):
     events: list[Event]
 
-    def get_name(self) -> str:
+    def get_names(self) -> str:
         return ", ".join([event.name for event in self.events])
 
     def id_to_event(self) -> dict[uuid.UUID, Event]:

@@ -185,7 +185,9 @@ class ChatService:
             )
         else:
             history_id = str(ulid_as_uuid())
-            system_prompt = akinator_system_template.format()
+            system_prompt = akinator_system_template.format(
+                all_names=self.pg_repository.get_events().get_names()
+            )
 
             domain_messages = Messages.from_chain_message(
                 [SystemMessage(content=system_prompt)]
