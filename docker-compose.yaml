@@ -5,6 +5,7 @@ services:
     environment:
       _UVICORN_HOST: "0.0.0.0"
       _UVICORN_PORT: 8000
+      _uvicorn_log_level: "DEBUG"
       _REDIS_HOST: "redis"
       _PG_HOST: "postgres"
     build:
