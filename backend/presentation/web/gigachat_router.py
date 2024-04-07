@@ -1,8 +1,18 @@
-from fastapi import APIRouter, Cookie, Header, HTTPException, Request, Response, status
+from fastapi import (
+    APIRouter,
+    Cookie,
+    Depends,
+    Header,
+    HTTPException,
+    Request,
+    Response,
+    status,
+)
 from presentation.dependencies import container
 from schemas.base import CamelizedBaseModel
 from schemas.message import Message, Messages
 from service.chat_service import HistoryNotFound
+from shared.base import logger
 
 router = APIRouter(prefix="/gigachat")
 
@@ -11,15 +21,34 @@ class UserMessage(CamelizedBaseModel):
     content: str
 
 
+def get_history_id_with_stop(
+    response: Response,
+    history_id: str | None = Cookie(None),
+    prompt: UserMessage = UserMessage(content="Что покушать?"),
+) -> str | None:
+    if history_id is None:
+        return history_id
+
+    logger.debug("processing history id: {}", history_id)
+
+    if not prompt.content.lower().startswith(("стоп", "заново", "забудь")):
+        return history_id
+
+    response.delete_cookie(key="history_id")
+    logger.debug("history id: {} removed via get_history_id_with_stop", history_id)
+    return None
+
+
 @router.post("/messages", response_model_exclude_none=True)
 def send_message(
     response: Response,
     prompt: UserMessage = UserMessage(content="Привет, как дела?"),
-    history_id: str | None = Cookie(None),
+    history_id: str | None = Depends(get_history_id_with_stop),
 ) -> Message:
     """
     Отправляет промпт в гигачат. Возвращает X-History-Id, который можно использовать для консистентности истории.
     """
+
     try:
         chat_response, history_id = container.chat_service.send_message(
             prompt.content, history_id=history_id
@@ -34,7 +63,7 @@ def send_message(
     return chat_response
 
 
-@router.post("/messages/history", response_model_exclude_none=True)
+@router.get("/messages/history", response_model_exclude_none=True)
 def get_history(history_id: str | None = Cookie(None)) -> Messages:
     """
     Возвращает историю сообщений по ID
@@ -71,7 +100,7 @@ def reset_history(response: Response, history_id: str | None = Cookie(None)) -> 
     return None
 
 
-@router.post("/messages/history/all", response_model_exclude_none=True)
+@router.get("/messages/history/all", response_model_exclude_none=True)
 def get_all_histories() -> list[str]:
     """
     Возвращает айди всех историй. Только для отладки
@@ -84,15 +113,15 @@ def get_all_histories() -> list[str]:
 def search(
     response: Response,
     prompt: UserMessage = UserMessage(content="Что покушать?"),
-    search_history_id: str | None = Cookie(None),
+    history_id: str | None = Depends(get_history_id_with_stop),
 ) -> Message:
     """
-    Возвращает айди всех историй. Только для отладки
+    Поиск места или события
     """
-    if search_history_id is not None:
-        return container.chat_service.search_continue(prompt.content, search_history_id)
+    if history_id is not None:
+        return container.chat_service.search_continue(prompt.content, history_id)
 
     message, history_id = container.chat_service.search(prompt.content)
-    response.set_cookie(key="search_history_id", value=history_id)
+    response.set_cookie(key="history_id", value=history_id)
 
     return message
