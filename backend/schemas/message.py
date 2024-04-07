@@ -3,6 +3,7 @@ from typing import Any
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_core.messages.base import BaseMessage
+from pydantic import Field
 from schemas.base import CamelizedBaseModel
 from schemas.event import Event
 
@@ -15,14 +16,14 @@ class MessageType(StrEnum):
 
 class Message(CamelizedBaseModel):
     text: str
-    type_: MessageType
+    type_: MessageType = Field(..., alias="type")
 
     event: Event | None = None
     description: str | None = None
 
     @classmethod
     def from_chain_message(cls, message: BaseMessage) -> "Message":
-        return cls(text=message.content, type_=MessageType(message.type))
+        return cls(text=message.content, type=MessageType(message.type))
 
     def to_chain_message(self) -> BaseMessage:
         if self.type_ == MessageType.AI:

@@ -40,7 +40,9 @@ def get_history_id_with_stop(
     return None
 
 
-@router.post("/messages", response_model_exclude_none=True)
+@router.post(
+    "/messages", response_model_exclude_none=True, response_model_by_alias=True
+)
 def send_message(
     response: Response,
     prompt: UserMessage = UserMessage(content="Привет, как дела?"),
@@ -65,7 +67,9 @@ def send_message(
     return chat_response
 
 
-@router.get("/messages/history", response_model_exclude_none=True)
+@router.get(
+    "/messages/history", response_model_exclude_none=True, response_model_by_alias=True
+)
 def get_history(
     history_id: str | None = Cookie(None),
     remove_system: bool = Query(True, alias="removeSystem"),
@@ -91,7 +95,9 @@ def get_history(
     return history
 
 
-@router.delete("/messages/history", response_model_exclude_none=True)
+@router.delete(
+    "/messages/history", response_model_exclude_none=True, response_model_by_alias=True
+)
 def reset_history(response: Response, history_id: str | None = Cookie(None)) -> None:
     """
     Возвращает историю сообщений по ID
@@ -107,7 +113,11 @@ def reset_history(response: Response, history_id: str | None = Cookie(None)) -> 
     return None
 
 
-@router.get("/messages/history/all", response_model_exclude_none=True)
+@router.get(
+    "/messages/history/all",
+    response_model_exclude_none=True,
+    response_model_by_alias=True,
+)
 def get_all_histories() -> list[str]:
     """
     Возвращает айди всех историй. Только для отладки
@@ -116,7 +126,7 @@ def get_all_histories() -> list[str]:
     return container.chat_service.get_all_histories()
 
 
-@router.post("/search", response_model_exclude_none=True)
+@router.post("/search", response_model_exclude_none=True, response_model_by_alias=True)
 def search(
     response: Response,
     prompt: UserMessage = UserMessage(content="Что покушать?"),
@@ -132,4 +142,4 @@ def search(
     message, history_id = container.chat_service.search(prompt.content)
     response.set_cookie(key="history_id", value=history_id)
 
-    return message
+    return message.jsonable_encoder(by_alias=True)
