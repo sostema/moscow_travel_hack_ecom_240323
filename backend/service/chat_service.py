@@ -1,4 +1,5 @@
 import random
+import re
 from dataclasses import dataclass
 
 from langchain.prompts import load_prompt
@@ -33,6 +34,13 @@ class ChatService:
             "Смотрите, что я нашла",
             "А как вам такое?",
         ]
+        self.requires_new_words = ["заново", "сначала"]
+        self.requires_new_words_re = re.compile(
+            "|".join([f"({word})" for word in self.requires_new_words]), re.IGNORECASE
+        )
+
+    def user_requires_new(self, query: str) -> bool:
+        return bool(self.requires_new_words_re.match(query))
 
     def search_continue(self, query: str, history_id: str) -> Message:
         history = self.load_history(history_id)
