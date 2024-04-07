@@ -12,13 +12,13 @@ const CardsList: FC<CardsListProps> = ({ events }) => {
 		const result: Array<Omit<CardProps, 'onClick'>> = [];
 
 		events.forEach((event, i) => {
-			if (i === 4) {
+			if (i === 3) {
 				result.push({
 					...event,
 					isGigachatCard: true,
 					size: 'm',
 				});
-			} else if (event.type !== 'WALK') {
+			} else {
 				result.push({ ...event, size: 'm' });
 			}
 		});

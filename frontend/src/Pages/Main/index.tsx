@@ -17,7 +17,7 @@ const Main: FC = () => {
 
 	useEffect(() => {
 		axios
-			.get<RoutesDataType>('/api/events/routes')
+			.get<RoutesDataType>('/api/events')
 			.then(({ data }) => {
 				setEvents(parseDataTrack(data.events));
 			})

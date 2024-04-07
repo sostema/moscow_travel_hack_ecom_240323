@@ -3,6 +3,7 @@ import { type EventCardType } from '../../../../../models/frontend';
 
 import CoinsIcon from '@media/coins_icon.svg?react';
 import AddressIcon from '@media/address_icon.svg?react';
+import CuisineIcon from '@media/cuisine_icon.svg?react';
 
 import cn from 'classnames';
 
@@ -22,6 +23,7 @@ const Card: FC<CardProps> = ({
 	address,
 	price,
 	isGigachatCard = false,
+	restaurantType,
 }) => {
 	const navigate = useNavigate();
 
@@ -71,6 +73,22 @@ const Card: FC<CardProps> = ({
 								<div className={styles.price__title}>{`Средний чек ${price}₽`}</div>
 							</div>
 						)}
+						{restaurantType && restaurantType.length > 0 && (
+							<div key={i} className={styles.price}>
+								<CuisineIcon className={styles.price__icon} />
+								<div className={styles.price__title}>
+									{restaurantType.map((type) => type)}
+								</div>
+							</div>
+						)}
+						{restaurantType &&
+							restaurantType?.length > 0 &&
+							restaurantType.map((type, i) => (
+								<div key={i} className={styles.price}>
+									<CuisineIcon className={styles.price__icon} />
+									<div className={styles.price__title}>{`Средний чек ${price}₽`}</div>
+								</div>
+							))}
 					</>
 				)}
 				{isGigachatCard && !isSmall && (

@@ -5,7 +5,7 @@ export interface EventCardType {
 	type: EventType;
 	name: string;
 	link: string;
-	restaurantType?: string;
+	restaurantType?: string[];
 	reviews?: string[];
 	description?: string;
 	imgLink?: string;

@@ -26,6 +26,16 @@ const Chat: FC<ChatProps> = ({ messages, sendMessage, newChat }) => {
 		setValue('');
 	}, [value]);
 
+	const handleOnKeyDown = useCallback(
+		(e: React.KeyboardEvent): void => {
+			if (e.key === 'Enter') {
+				sendMessage(value);
+				setValue('');
+			}
+		},
+		[value],
+	);
+
 	return (
 		<div className={styles.root}>
 			<div className={styles.messages__container}>
@@ -60,6 +70,7 @@ const Chat: FC<ChatProps> = ({ messages, sendMessage, newChat }) => {
 					<input
 						className={styles.input}
 						value={value}
+						onKeyDown={handleOnKeyDown}
 						onChange={handleInputChange}
 						placeholder="Поиск"
 					/>
@@ -68,9 +79,11 @@ const Chat: FC<ChatProps> = ({ messages, sendMessage, newChat }) => {
 					</button>
 				</div>
 				<div className={styles.customMessages__container}>
-					<button className={styles.customMessage} onClick={newChat}>
-						Новый чат
-					</button>
+					{messages.length >= 0 && (
+						<button className={styles.customMessage} onClick={newChat}>
+							Новый чат
+						</button>
+					)}
 					<button className={styles.customMessage}>Куда мне сходить еще?</button>
 				</div>
 			</div>

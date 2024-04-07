@@ -42,11 +42,14 @@ const Input: FC = () => {
 			});
 	};
 
-	const handleNewChat = (): void => {
+	const handleNewChat = (callback?: () => void): void => {
 		axios
 			.delete('/api/gigachat/messages/history')
 			.then(() => {
 				setMessages([]);
+			})
+			.then(() => {
+				callback?.();
 			})
 			.catch((e) => {
 				console.log(e);
@@ -54,9 +57,11 @@ const Input: FC = () => {
 	};
 
 	const handleSuggestClick = useCallback((): void => {
-		handleSendMessage(inputValue);
-		setShowChat(true);
-		setShowSuggest(false);
+		handleNewChat(() => {
+			handleSendMessage(inputValue);
+			setShowChat(true);
+			setShowSuggest(false);
+		});
 	}, [inputValue]);
 
 	useEffect(() => {

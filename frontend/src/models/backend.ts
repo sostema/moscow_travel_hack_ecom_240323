@@ -5,7 +5,7 @@ export interface EventDataType {
 	type: EventType;
 	name: string;
 	link: string;
-	restaurantType: string | null;
+	restaurantType: string[] | null;
 	description: string | null;
 	imgLink: string | null;
 	reviews: string[] | null;
