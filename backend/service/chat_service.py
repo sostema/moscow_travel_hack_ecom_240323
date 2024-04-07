@@ -34,7 +34,7 @@ class ChatService:
             "Смотрите, что я нашла",
             "А как вам такое?",
         ]
-        self.requires_new_words = ["заново", "сначала"]
+        self.requires_new_words = ["заново", "сначала", "найди", "найти"]
         self.requires_new_words_re = re.compile(
             "|".join([f"({word})" for word in self.requires_new_words]), re.IGNORECASE
         )

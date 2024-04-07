@@ -64,6 +64,9 @@ example_events = [
 class Events(CamelizedBaseModel):
     events: list[Event]
 
+    def get_name(self) -> str:
+        return ", ".join([event.name for event in self.events])
+
 
 class Route(CamelizedBaseModel):
     events: list[Event]

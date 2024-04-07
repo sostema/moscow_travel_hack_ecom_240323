@@ -8,11 +8,11 @@
 #### Диаграмма решения
 ![arch](docs/arch.svg)<br>
 Все компаненты контейнерезированы:
-- `nginx` - reverse-proxy, роутинг, SSL
-- `frontend` - react spa приложение для фронтенда
-- `backend` - python backend, использует `fastapi`, `uvicorn`, `sqlalchemy`, `pydantic` и много сложных data-science библиотек
-- `redis` - key-value субд
-- `postgres` - реляционая СУБД с расширением pg-vector
+- `nginx` - Reverse-proxy, роутинг, SSL
+- `frontend` - React SPA приложение для фронтенда
+- `backend` - Python backend, использует `fastapi`, `uvicorn`, `sqlalchemy`, `pydantic` и `gigachain`
+- `redis` - Key-value СУБД
+- `postgres` - Реляционая СУБД с расширением pg-vector
 
 #### Запуск решения
 ##### В докере
