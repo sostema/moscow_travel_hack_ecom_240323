@@ -10,8 +10,8 @@ def summarize(llm: GigaChat, text_list: list[str]) -> str:
         chunk_size=256, chunk_overlap=64
     )
     document_splits = text_splitter.create_documents(text_list)
-    map_prompt = load_prompt("src/mthe_ml/prompts/summarize_map_system.yaml")
-    combine_prompt = load_prompt("src/mthe_ml/prompts/summarize_combine_system.yaml")
+    map_prompt = load_prompt("ml/prompts/summarize_map_system.yaml")
+    combine_prompt = load_prompt("ml/prompts/summarize_combine_system.yaml")
     summarize_chain = load_summarize_chain(
         llm,
         map_prompt=map_prompt,

@@ -100,14 +100,13 @@ services:
         limits:
           cpus: '2.00'
           memory: 4000M
-
-  autoheal:
-    restart: always
-    image: willfarrell/autoheal
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 100M
+  # autoheal:
+  #   restart: always
+  #   image: willfarrell/autoheal
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.50'
+  #         memory: 100M

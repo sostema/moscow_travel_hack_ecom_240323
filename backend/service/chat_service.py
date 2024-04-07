@@ -16,6 +16,8 @@ class ChatService:
     gigachat_supplier: GigachatSupplier
     redis_repository: RedisRepository
 
+    # def search(self)
+
     def _get_path_messages(self, history_id: str) -> str:
         return f"chat::{history_id}"
 

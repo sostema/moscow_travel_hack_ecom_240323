@@ -3,7 +3,7 @@ from typing import Any
 from langchain.prompts import PromptTemplate, load_prompt
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
 
-system_prompt_template = load_prompt("src/mthe_ml/prompts/search_system.yaml")
+system_prompt_template = load_prompt("ml/prompts/search_system.yaml")
 
 
 def generate_metadata_string(event_type: str, metadata: dict[str, Any]) -> str:
