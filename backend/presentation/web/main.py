@@ -15,7 +15,7 @@ with open(PARENT / "rapidoc.html", "r") as f:
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Amazing digital misis")
+    app = FastAPI(title="Amazing digital misis", root_path="/api")
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
