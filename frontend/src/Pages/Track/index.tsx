@@ -13,8 +13,10 @@ import { parseDataTrack } from '../../parser';
 import { type EventCardType } from '../../models/frontend';
 import Events from './components/Events';
 import Card from '../../components/Card';
+import Header from '../../static/Header';
+import Footer from '../../static/Footer';
 
-const App: FC = () => {
+const Track: FC = () => {
 	const [time, setTime] = useState<string>('');
 	const [distance, setDistance] = useState<string>('');
 	const [events, setEvents] = useState<EventCardType[]>([]);
@@ -50,34 +52,38 @@ const App: FC = () => {
 	}, []);
 
 	return (
-		<main className="layoutNota_background__IzYDA layoutNota_content__MlFYT">
-			<div className="planDetails_container__Kdl9G">
-				<div className="planDetails_contentWrap__xh8J_">
-					<div className="planHeader_contentWrapper__vrbiy">
-						<div className="planHeader_content__QHQTX">
-							<div className={styles.title}>
-								<Title text="Большая прогулка в Сокольниках" />
-							</div>
-							<div className="" data-tour="onboarding-plan-header">
-								<Button />
+		<>
+			<Header />
+			<main className="layoutNota_background__IzYDA layoutNota_content__MlFYT">
+				<div className="planDetails_container__Kdl9G">
+					<div className="planDetails_contentWrap__xh8J_">
+						<div className="planHeader_contentWrapper__vrbiy">
+							<div className="planHeader_content__QHQTX">
+								<div className={styles.title}>
+									<Title text="Большая прогулка в Сокольниках" />
+								</div>
+								<div className="" data-tour="onboarding-plan-header">
+									<Button />
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div className={styles.wrapper}>
-					<div className={styles.timedistance}>
-						<HumanIcon />
-						<span className={styles.time}>{time}</span>
-						<span className={styles.distance}>{distance}</span>
+					<div className={styles.wrapper}>
+						<div className={styles.timedistance}>
+							<HumanIcon />
+							<span className={styles.time}>{time}</span>
+							<span className={styles.distance}>{distance}</span>
+						</div>
+					</div>
+					<div className={styles.container}>
+						<Events onClick={handleEventClick} events={events} />
+						{activeEvent && <Card {...activeEvent} />}
 					</div>
 				</div>
-				<div className={styles.container}>
-					<Events onClick={handleEventClick} events={events} />
-					{activeEvent && <Card {...activeEvent} />}
-				</div>
-			</div>
-		</main>
+			</main>
+			<Footer />
+		</>
 	);
 };
 
-export default App;
+export default Track;
