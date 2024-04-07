@@ -1,7 +1,9 @@
+import random
 from dataclasses import dataclass
 
-from ml import classify_event_type
+from ml import classify_event_type, search_results_handler
 from ml.retrieval_manager import RetrievalManager
+from repository.pg_repository import PgRepository
 from repository.redis_repository import RedisRepository
 from schemas.message import BaseMessage, Message, Messages, MessageType
 from shared.base import logger
@@ -18,6 +20,14 @@ class ChatService:
     gigachat_supplier: GigachatSupplier
     redis_repository: RedisRepository
     retrieval_manager: RetrievalManager
+    pg_repository: PgRepository
+
+    def __post_init__(self) -> None:
+        self.string_header_what_do_you_think = [
+            "Что скажете по поводу этого мероприятия?",
+            "А как вам такое?",
+            "Смотрите, что я нашла",
+        ]
 
     def search(self, query: str) -> Message:
         message = classify_event_type.generate_messages_for_chat(query)
@@ -25,9 +35,20 @@ class ChatService:
         event_type = classify_event_type.parse_response_for_types(resp.content)
 
         doc = self.retrieval_manager.retrieve_most_relevant_document(event_type, query)
-        print(doc.metadata)
 
-        return Message(text="AAAA", type_=MessageType.HUMAN)
+        event = self.pg_repository.get_event(id_=doc.metadata["id"])
+
+        message = search_results_handler.generate_messages_for_chat(
+            user_input=query, event=event
+        )
+        resp = self.gigachat_supplier.chat(message)
+
+        return Message(
+            text=random.choice(self.string_header_what_do_you_think),
+            description=resp.content,
+            type_=MessageType.HUMAN,
+            event=event,
+        )
 
     def _get_path_messages(self, history_id: str) -> str:
         return f"chat::{history_id}"

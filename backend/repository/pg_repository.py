@@ -1,3 +1,4 @@
+import uuid
 from dataclasses import dataclass
 
 from langchain.docstore.document import Document
@@ -77,6 +78,16 @@ class PgRepository:
             session.execute(delete(EventDB))
             session.commit()
 
+    def delete_embeddings(self) -> None:
+        logger.info("DELETING EMBEDDING!")
+        with self._engine.connect() as session:
+            session.execute(
+                text(
+                    "delete from langchain_pg_collection where name in ('vector_collection_event', 'vector_collection_restaurant')"
+                )
+            )
+            session.commit()
+
     def insert_events(self, events: Events) -> None:
         with self._engine.connect() as session:
             for event in events.events:
@@ -98,6 +109,30 @@ class PgRepository:
                 )
             session.commit()
 
+    def get_event(self, id_: uuid.UUID) -> Event:
+        with self._engine.connect() as session:
+            row = session.execute(
+                select(EventDB).where(EventDB.internal_id == id_)
+            ).fetchone()
+            return self._parse_event(row)
+
+    def _parse_event(self, row: EventDB) -> Event:
+        return Event(
+            id=row.internal_id,
+            type=row.type,
+            restaurant_type=row.restaurant_type,
+            name=row.name,
+            description=row.description,
+            link=row.link,
+            img_link=row.img_link,
+            price=row.price,
+            address=row.address,
+            lat=row.lat,
+            lng=row.lng,
+            time=None,
+            distance=None,
+        )
+
     def get_events(self) -> Events:
         with self._engine.connect() as session:
             rows = session.execute(select(EventDB)).fetchall()
@@ -105,23 +140,7 @@ class PgRepository:
         events = []
         for row in rows:
             try:
-                events.append(
-                    Event(
-                        id=row.internal_id,
-                        type=row.type,
-                        restaurant_type=row.restaurant_type,
-                        name=row.name,
-                        description=row.description,
-                        link=row.link,
-                        img_link=row.img_link,
-                        price=row.price,
-                        address=row.address,
-                        lat=row.lat,
-                        lng=row.lng,
-                        time=None,
-                        distance=None,
-                    )
-                )
+                events.append(self._parse_event(row))
             except ValidationError:
                 logger.exception(f"failed to validate event from db, row: {row}")
 

@@ -1,6 +1,7 @@
 import uuid
 from decimal import Decimal
 from enum import StrEnum
+from typing import Any
 
 from pydantic import Field
 from schemas.base import CamelizedBaseModel
@@ -30,6 +31,16 @@ class Event(CamelizedBaseModel):
 
     time: int | None = Field(None, description="in seconds")
     distance: float | None = Field(None, description="in KM")
+
+    def export_metadata(self) -> dict[str, Any]:
+        return {
+            "event_type": self.type_,
+            "name": self.name,
+            "price": float(self.price),
+            "type": self.restaurant_type,
+            "location": self.address,
+            "id": str(self.id_),
+        }
 
 
 example_events = [

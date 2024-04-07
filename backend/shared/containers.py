@@ -30,6 +30,7 @@ def init_combat_container() -> Container:
     chat_service = ChatService(
         gigachat_supplier=gigachat_supplier,
         redis_repository=redis_repository,
+        pg_repository=pg_repository,
         retrieval_manager=retrieval_manager,
     )
 
