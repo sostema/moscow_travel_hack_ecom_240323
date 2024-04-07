@@ -67,6 +67,9 @@ class Events(CamelizedBaseModel):
     def get_name(self) -> str:
         return ", ".join([event.name for event in self.events])
 
+    def id_to_event(self) -> dict[uuid.UUID, Event]:
+        return {event.id_: event for event in self.events}
+
 
 class Route(CamelizedBaseModel):
     events: list[Event]

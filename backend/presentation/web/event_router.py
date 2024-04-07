@@ -1,3 +1,6 @@
+import random
+import uuid
+
 from fastapi import APIRouter
 from presentation.dependencies import container
 from schemas.event import Event, Events, EventType, Route, example_events
@@ -12,7 +15,9 @@ router = APIRouter(prefix="/events")
     response_model=Events,
 )
 async def get_events() -> Events:
-    return container.event_service.get_events()
+    return Events(
+        events=random.choices(container.event_service.get_events().events, k=6)
+    )
 
 
 @router.get(
@@ -22,10 +27,11 @@ async def get_events() -> Events:
     response_model=Route,
 )
 async def get_routes() -> Route:
-    events = container.event_service.get_events().events
+    events_dict = container.event_service.get_events().id_to_event()
+
     return Route(
         events=[
-            events[0],
+            events_dict[uuid.UUID("018eb7f5-91b5-c150-e663-bc5e9942de2a")],
             Event(
                 type=EventType.WALK,
                 name="WALK",
@@ -35,7 +41,7 @@ async def get_routes() -> Route:
                 time=32 * 60,
                 distance=2.500,
             ),
-            events[1],
+            events_dict[uuid.UUID("018eb7f5-8394-6a29-edaf-74180659acbe")],
             Event(
                 type=EventType.WALK,
                 name="WALK",
@@ -45,17 +51,7 @@ async def get_routes() -> Route:
                 time=20 * 60,
                 distance=2.1,
             ),
-            events[2],
-            Event(
-                type=EventType.WALK,
-                name="WALK",
-                description="",
-                link="",
-                price=0,
-                time=12 * 60,
-                distance=1.2,
-            ),
-            events[3],
+            events_dict[uuid.UUID("018eb7f5-7f46-2325-5170-8f310332fe03")],
         ],
         time=64 * 60,
         distance=5.8,
