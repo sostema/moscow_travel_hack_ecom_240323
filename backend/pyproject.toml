@@ -25,17 +25,14 @@ requests = "^2.31.0"
 pydantic = "v2.6.4"
 greenlet = "^3.0.3"
 gigachain = "^0.1.13.2"
-langserve = "^0.0.51"
 sse-starlette = "^2.1.0"
 sentence-transformers = "^2.6.1"
 pgvector = "^0.2.5"
-langchain-community = "^0.0.31"
 jupyterlab = "^4.1.5"
 python-dotenv = "^1.0.1"
 pydantic-settings = "^2.2.1"
 tiktoken = "^0.6.0"
 lark = "^1.1.9"
-gigagraph = "^0.0.26"
 
 
 [build-system]
