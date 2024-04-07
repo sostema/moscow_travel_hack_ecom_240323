@@ -1,10 +1,11 @@
 {
 	"compilerOptions": {
 		"lib": ["es2020", "dom"],
+		"inlineSourceMap": false,
+		"sourceMap": false,
 		"module": "commonjs",
 		"target": "ESNext",
 		"jsx": "react",
-		"sourceMap": true,
 		"strict": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
