@@ -11,7 +11,7 @@ class UserMessage(CamelizedBaseModel):
     content: str
 
 
-@router.post("/messages")
+@router.post("/messages", response_model_exclude_none=True)
 def send_message(
     response: Response,
     prompt: UserMessage = UserMessage(content="Привет, как дела?"),
@@ -34,7 +34,7 @@ def send_message(
     return chat_response
 
 
-@router.post("/messages/history")
+@router.post("/messages/history", response_model_exclude_none=True)
 def get_history(history_id: str | None = Cookie(None)) -> Messages:
     """
     Возвращает историю сообщений по ID
@@ -55,7 +55,7 @@ def get_history(history_id: str | None = Cookie(None)) -> Messages:
     return history
 
 
-@router.delete("/messages/history")
+@router.delete("/messages/history", response_model_exclude_none=True)
 def reset_history(response: Response, history_id: str | None = Cookie(None)) -> None:
     """
     Возвращает историю сообщений по ID
@@ -71,7 +71,7 @@ def reset_history(response: Response, history_id: str | None = Cookie(None)) -> 
     return None
 
 
-@router.post("/messages/history/all")
+@router.post("/messages/history/all", response_model_exclude_none=True)
 def get_all_histories() -> list[str]:
     """
     Возвращает айди всех историй. Только для отладки
@@ -80,7 +80,7 @@ def get_all_histories() -> list[str]:
     return container.chat_service.get_all_histories()
 
 
-@router.post("/search")
+@router.post("/search", response_model_exclude_none=True)
 def search(
     response: Response,
     prompt: UserMessage = UserMessage(content="Что покушать?"),
