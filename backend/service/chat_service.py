@@ -7,7 +7,7 @@ from ml import classify_event_type, search_results_handler
 from ml.retrieval_manager import RetrievalManager
 from repository.pg_repository import PgRepository
 from repository.redis_repository import RedisRepository
-from schemas.message import BaseMessage, Message, Messages, MessageType
+from schemas.message import BaseMessage, HistoryType, Message, Messages, MessageType
 from shared.base import logger
 from shared.ulid import ulid_as_uuid
 from supplier.gigachat_supplier import GigachatSupplier
@@ -76,7 +76,9 @@ class ChatService:
             event=event,
         )
         history_id = str(ulid_as_uuid())
-        self.dump_history(history_id, Messages(messages=[domain_message]))
+        self.dump_history(
+            history_id, Messages(messages=[domain_message], type=HistoryType.SEARCH)
+        )
 
         return domain_message, history_id
 
@@ -99,7 +101,11 @@ class ChatService:
 
     def dump_history(self, history_id: str, history: Messages) -> None:
         self.redis_repository.rset(self._get_path_messages(history_id), history.json())
-        logger.info("history dumped: {}", history.jsonable_encoder())
+        logger.info(
+            "len: {}, history dumped: {}",
+            len(history.messages),
+            history.jsonable_encoder(),
+        )
 
     def get_all_histories(self) -> list[str]:
         histories = self.redis_repository.keys(self._get_path_messages("*"))
@@ -112,7 +118,11 @@ class ChatService:
             raise HistoryNotFound()
         history = Messages.parse_raw(history_raw.decode())
 
-        logger.info("history loaded: {}", history.jsonable_encoder())
+        logger.info(
+            "len: {}, history loaded: {}",
+            len(history.messages),
+            history.jsonable_encoder(),
+        )
         return history
 
     def send_message(self, message: str, history_id: str | None) -> tuple[Message, str]:
@@ -124,7 +134,6 @@ class ChatService:
             history = self.load_history(history_id)
 
         history = self.gigachat_supplier.message(message, history=history)
-        logger.info("Chat history: {}, history_id: {}", history, history_id)
 
         self.dump_history(history_id, history)
 
@@ -138,12 +147,20 @@ class ChatService:
         resp = self.gigachat_supplier.chat.invoke(messages)
         return self.search(resp.content)
 
-    def akinator(self, history_id: str | None = None) -> tuple[Message, str]:
+    def akinator(
+        self, query: str | None = None, history_id: str | None = None
+    ) -> tuple[Message, str]:
         if history_id is not None:
             domain_messages = self.load_history(history_id)
-            if len(domain_messages.messages) >= 7:
-                return self.akinator_final_state(domain_messages)
+            if domain_messages.type_ == HistoryType.SEARCH:
+                return self.search_continue(query, history_id), history_id
 
+            if len(domain_messages.messages) >= 5:
+                return self.akinator_final_state(domain_messages)
+            else:
+                domain_messages.messages.append(
+                    Message.from_chain_message(HumanMessage(content=query))
+                )
         else:
             history_id = str(ulid_as_uuid())
             system_prompt = akinator_system_template.format()
@@ -157,6 +174,7 @@ class ChatService:
         )
         domain_messages.messages.append(Message.from_chain_message(resp))
 
+        domain_messages.type_ = HistoryType.AKINATOR
         self.dump_history(history_id, domain_messages)
 
-        return domain_messages[-1], history_id
+        return domain_messages.messages[-1], history_id

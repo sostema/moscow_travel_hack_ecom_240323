@@ -40,8 +40,14 @@ class Message(CamelizedBaseModel):
         raise ValueError("unknown chain message type...")
 
 
+class HistoryType(StrEnum):
+    SEARCH = "SEARCH"
+    AKINATOR = "AKINATOR"
+
+
 class Messages(CamelizedBaseModel):
     messages: list[Message]
+    type_: HistoryType = Field(HistoryType.SEARCH, alias="type")
 
     def extract_chain_message(self) -> list[BaseMessage]:
         return [message.to_chain_message() for message in self.messages]

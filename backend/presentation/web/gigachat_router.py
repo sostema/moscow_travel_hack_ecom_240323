@@ -139,7 +139,7 @@ def search(
     message, history_id = container.chat_service.search(prompt.content)
     response.set_cookie(key="history_id", value=history_id)
 
-    return message.jsonable_encoder(by_alias=True)
+    return message
 
 
 @router.post(
@@ -147,17 +147,16 @@ def search(
 )
 def akinator(
     response: Response,
-    prompt: UserMessage = UserMessage(content="Что покушать?"),
+    prompt: UserMessage | None = None,
     history_id: str | None = Depends(get_history_id_with_stop),
 ) -> Message:
     """
     Поиск места или события в формате акинатора
     Отправка слова "стоп" вначале промпта удалит историю. Также удалить историю можно через DELETE /messages/history
     """
-    if history_id is not None:
-        return container.chat_service.search_continue(prompt.content, history_id)
-
-    message, history_id = container.chat_service.search(prompt.content)
+    message, history_id = container.chat_service.akinator(
+        prompt.content if prompt is not None else None, history_id
+    )
     response.set_cookie(key="history_id", value=history_id)
 
-    return message.jsonable_encoder(by_alias=True)
+    return message
