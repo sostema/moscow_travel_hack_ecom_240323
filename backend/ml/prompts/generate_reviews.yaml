@@ -2,7 +2,8 @@ input_variables: [event_text, event_name]
 partial_variables:
     combine_size: '2-3 предложения'
     event_type: 'ресторана'
-template: 'Используя описание {event_type} "{event_name}" сгенерируй ПОЛОЖИТЕЛЬНЫЙ отзыв на {combine_size}.
+template: 'Ты - умный ассистент для поиска мероприятий в системе RUSSPASS. Твоя главная задача - найти наиболее подходящее мероприятие для пользователя.
+Используя описание {event_type} "{event_name}" сгенерируй ПОЛОЖИТЕЛЬНЫЙ отзыв на {combine_size}.
 
 "{event_text}"
 
