@@ -26,8 +26,8 @@ class ChatService:
     def __post_init__(self) -> None:
         self.string_header_what_do_you_think = [
             "Что скажете по поводу этого мероприятия?",
-            "А как вам такое?",
             "Смотрите, что я нашла",
+            "А как вам такое?",
         ]
 
     def search_continue(self, query: str, history_id: str) -> Message:
@@ -68,7 +68,7 @@ class ChatService:
         domain_message = Message(
             text=random.choice(self.string_header_what_do_you_think),
             description=resp.content,
-            type_=MessageType.HUMAN,
+            type_=MessageType.AI,
             event=event,
         )
         history_id = str(ulid_as_uuid())
